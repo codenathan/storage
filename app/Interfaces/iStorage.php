@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Interfaces;
+
 interface iStorage{
 
     public function save($data);

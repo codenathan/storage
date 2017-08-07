@@ -1,0 +1,13 @@
+{
+  "name": "codenathan/storage",
+  "description": "The Storage Handler",
+  "type": "project",
+  "require": {
+    "php": ">=5.6.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "app/"
+    }
+  }
+}
