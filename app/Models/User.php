@@ -6,4 +6,55 @@ use App\Core\Model;
 
 class user extends Model {
 
+    /**
+     * Alphanumeric with hyphen and underscore only
+     *
+     * @var
+     */
+    public $username;
+
+    /**
+     * Mr,Mrs,Miss,Rs,Rev,Dr,Professor - Should be conistent with gender
+     *
+     * @var
+     */
+    public $title;
+
+    /**
+     * Alpha no spaces
+     *
+     * @var
+     */
+    public $firstName;
+
+
+    /**
+     * 1 alpha char
+     *
+     * @var
+     */
+    public $middleInitial;
+
+    /**
+     * Alpha, allow spaces and hyphens
+     *
+     * @var
+     */
+    public $lastName;
+
+    /**
+     * 1 alpha char, ( M = male, F = female). Should be consistent with traditional gender for title
+     *
+     * @var
+     */
+    public $gender;
+
+    /**
+     * valid date. YYYY-MM-DD format
+     *
+     * @var
+     */
+    public $dateOfBirth;
+
+
 }

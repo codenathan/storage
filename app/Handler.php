@@ -41,10 +41,9 @@ class Handler{
 
         $model = isset($the_request[1]) && (is_string($the_request[1])) ? ucwords(strtolower($the_request[1])) : null;
 
-
-
         if($this->doesModelExist($model)){
-            $this->model = $model;
+            $class = $this->models_namespace.$model;
+            $this->model = new $class;
         }
     }
 
@@ -62,11 +61,12 @@ class Handler{
 
     /**
      * Checks if model exists
+     * @param $model string
      * @return bool
      */
-    public function doesModelExist(){
+    public function doesModelExist($model){
 
-       return class_exists($this->models_namespace.$this->model);
+       return class_exists($this->models_namespace.$model);
     }
 
 
@@ -81,9 +81,10 @@ class Handler{
     {
         $response = new ApiResponse();
 
-
         if ($this->model instanceof Model) {
-
+            $response->status_code = ApiResponse::HTTP_OK;
+            $response->error        = [];
+            $response->success      = $this->model;
 
         } else {
             $response->status_code = ApiResponse::HTTP_BAD_REQUEST;

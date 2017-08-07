@@ -1,7 +1,11 @@
 <?php
 namespace App\Core;
 
+use App\Traits\toJson;
+
 class ApiResponse{
+
+    use toJson;
 
     const HTTP_OK                       = 200; // OK - Everything went well
     const HTTP_BAD_REQUEST              = 400; // Bad Request - Server does not understand what we mean
@@ -47,9 +51,6 @@ class ApiResponse{
 
     }
 
-    public function output(){
-        header('Content-Type: application/json');
-        return \json_encode($this);
-    }
+
 
 }

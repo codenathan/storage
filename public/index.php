@@ -28,7 +28,7 @@ $storage = new \App\Services\FileStorage();
 $app = (new \App\Handler($storage))->handle();
 
 if($app instanceof \App\Core\ApiResponse){
-   return $app->output();
+   return $app->printOutput();
 }
 
 
