@@ -5,6 +5,7 @@ namespace App;
 
 use App\Core\Api;
 use App\Core\ApiResponse;
+use App\Core\Model;
 use App\Interfaces\iStorage;
 
 class Handler{
@@ -18,21 +19,39 @@ class Handler{
 
     public $template;
 
+    public $model;
+
     const MODEL_NOT_FOUND = 'the data model you are looking for does not exist';
 
+    /**
+     * Handler constructor.
+     * @param iStorage $storage
+     */
     public function __construct(iStorage $storage)
     {
         $this->request = $_GET['request'];
         $this->storage = $storage;
 
+        $this->mapRequest();
+
+    }
+
+    private function mapRequest(){
+        $the_request = explode('/', $this->request);
+
+        $model = isset($the_request[1]) && (is_string($the_request[1])) ? ucwords(strtolower($the_request[1])) : null;
+
+
+
+        if($this->doesModelExist($model)){
+            $this->model = $model;
+        }
     }
 
     public function handle(){
 
-
         if($this->isApiRequest()){
             return $this->handleApiRequest();
-
         }
 
         $loader = new \Twig_Loader_Filesystem(STORE_VIEWS);
@@ -43,12 +62,11 @@ class Handler{
 
     /**
      * Checks if model exists
-     * @param null $model
      * @return bool
      */
-    public function doesModelExist($model = null){
+    public function doesModelExist(){
 
-       return class_exists($this->models_namespace.$model);
+       return class_exists($this->models_namespace.$this->model);
     }
 
 
@@ -63,11 +81,8 @@ class Handler{
     {
         $response = new ApiResponse();
 
-        $api_request = explode('/', $this->request);
 
-        $model = isset($api_request[1]) && (is_string($api_request[1])) ? ucwords(strtolower($api_request[1])) : null;
-
-        if ($this->doesModelExist($model)) {
+        if ($this->model instanceof Model) {
 
 
         } else {
