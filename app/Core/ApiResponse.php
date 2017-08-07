@@ -45,6 +45,10 @@ class ApiResponse{
         $this->status_code  = $status_code;
         $this->response     = $response;
 
+    }
+
+    public function output(){
+        header('Content-Type: application/json');
         return \json_encode($this);
     }
 

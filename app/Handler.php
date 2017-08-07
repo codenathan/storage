@@ -16,6 +16,8 @@ class Handler{
 
     public $storage;
 
+    public $template;
+
     const MODEL_NOT_FOUND = 'the data model you are looking for does not exist';
 
     public function __construct(iStorage $storage)
@@ -29,28 +31,13 @@ class Handler{
 
 
         if($this->isApiRequest()){
-            $response = new ApiResponse();
+            return $this->handleApiRequest();
 
-            $api_request = explode('/',$this->request);
-
-            $model = isset($api_request[1]) && (is_string($api_request[1])) ? ucwords(strtolower($api_request[1])) : null;
-
-            if($this->doesModelExist($model)){
-
-
-            }else{
-                $response->status_code = ApiResponse::HTTP_BAD_REQUEST;
-                $response->error[]     = self::MODEL_NOT_FOUND;
-            }
-
-
-            return $response;
-
-        }else{
-            'not api request';
         }
 
-        return ;
+        $loader = new \Twig_Loader_Filesystem(STORE_VIEWS);
+        $this->template = new \Twig_Environment($loader, array('cache' => STORE_CACHE,'debug' => STORE_DEBUG));
+
     }
 
 
@@ -67,6 +54,29 @@ class Handler{
 
     public function isApiRequest(){
         return substr( $this->request, 0, 4 ) === "api/";
+    }
+
+    /**
+     * @return ApiResponse
+     */
+    private function handleApiRequest()
+    {
+        $response = new ApiResponse();
+
+        $api_request = explode('/', $this->request);
+
+        $model = isset($api_request[1]) && (is_string($api_request[1])) ? ucwords(strtolower($api_request[1])) : null;
+
+        if ($this->doesModelExist($model)) {
+
+
+        } else {
+            $response->status_code = ApiResponse::HTTP_BAD_REQUEST;
+            $response->error[] = self::MODEL_NOT_FOUND;
+        }
+
+
+        return $response;
     }
 
 }

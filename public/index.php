@@ -13,6 +13,7 @@ $root = realpath(__DIR__.'/../');
 defined('DS')          or define('DS',DIRECTORY_SEPARATOR);
 defined('STORE_DEBUG') or define('STORE_DEBUG', true);
 defined('STORE_VIEWS') or define('STORE_VIEWS', $root.DS.'views');
+defined('STORE_CACHE') or define('STORE_CACHE', $root.DS.'storage'.DS.'cache');
 
 
 if(STORE_DEBUG){
@@ -25,6 +26,11 @@ if(STORE_DEBUG){
 $storage = new \App\Services\FileStorage();
 
 $app = (new \App\Handler($storage))->handle();
+
+if($app instanceof \App\Core\ApiResponse){
+   return $app->output();
+}
+
 
 
 
