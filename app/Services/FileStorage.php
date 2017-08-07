@@ -2,9 +2,16 @@
 
 namespace  App\Services;
 
+use App\Core\Storage;
 use App\Interfaces\iStorage;
 
-class FileStorage implements iStorage{
+class FileStorage extends Storage implements iStorage{
+
+
+    public function index()
+    {
+        // TODO: Implement index() method.
+    }
 
     public function save($data)
     {
@@ -20,4 +27,5 @@ class FileStorage implements iStorage{
     {
         // TODO: Implement delete() method.
     }
+
 }

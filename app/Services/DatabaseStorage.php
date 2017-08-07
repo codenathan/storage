@@ -2,9 +2,15 @@
 
 namespace  App\Services;
 
+use App\Core\Storage;
 use App\Interfaces\iStorage;
 
-class DatabaseStorage implements iStorage{
+class DatabaseStorage extends Storage implements iStorage{
+
+    public function index()
+    {
+        // TODO: Implement index() method.
+    }
 
     public function save($data)
     {
