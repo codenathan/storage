@@ -19,9 +19,9 @@ class ApiResponse{
     /**
      * Response data
      *
-     * @var null | array | string
+     * @var  array
      */
-    public $response = null;
+    public $response = [];
 
     /**
      * The status code as a result of request
@@ -29,6 +29,8 @@ class ApiResponse{
      * @var int
      */
     public $status_code = 404;
+
+    public $error       = [];
 
 
     /**
