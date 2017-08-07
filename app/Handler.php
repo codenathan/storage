@@ -16,6 +16,9 @@ class Handler{
 
     public $storage;
 
+    /**
+     * @var null | \Twig_Environment
+     */
     public $template;
 
     public $model;
@@ -24,7 +27,7 @@ class Handler{
 
     public $views = ['index','create','edit'];
 
-    public $view = null;
+    public $view = 'errors/404';
 
 
     const MODEL_NOT_FOUND = 'the data model you are looking for does not exist';
@@ -76,6 +79,9 @@ class Handler{
         if(!$this->isViewAllowed($view)) return;
 
 
+        $this->view = strtolower($model).'/'.$view;
+
+
     }
 
     public function handle(){
@@ -84,27 +90,10 @@ class Handler{
             return $this->handleApiRequest();
         }
 
+
         return $this->handleRegularRequest();
 
     }
-
-
-    /**
-     * Checks if model exists
-     * @param $model string
-     * @return bool
-     */
-    public function doesModelExist($model){
-
-       return class_exists($this->models_namespace.$model);
-    }
-
-
-    public function isApiRequest(){
-        return substr( $this->request, 0, 4 ) === "api/";
-    }
-
-
 
     /**
      * @return ApiResponse
@@ -119,6 +108,8 @@ class Handler{
             $response->success      = true;
             $response->response     = $this->model;
 
+            //create api bridge to load data
+
         } else {
             $response->status_code = ApiResponse::HTTP_BAD_REQUEST;
             $response->error[] = self::MODEL_NOT_FOUND;
@@ -131,19 +122,24 @@ class Handler{
     private function handleRegularRequest(){
         $loader = new \Twig_Loader_Filesystem(STORE_VIEWS);
         $this->template = new \Twig_Environment($loader, array('cache' => STORE_CACHE,'debug' => STORE_DEBUG));
-        if($this->model instanceof Model && $this->template){
-            var_dump($this->model);
-            exit();
-          $this->template->load();
 
-        }
+        return $this->template;
+    }
 
 
+    public function isApiRequest(){
+        return substr( $this->request, 0, 4 ) === "api/";
+    }
 
-        $this->template->load('errors/404.twig');
 
+    /**
+     * Checks if model exists
+     * @param $model string
+     * @return bool
+     */
+    public function doesModelExist($model){
 
-
+        return class_exists($this->models_namespace.$model);
     }
 
     private function doesStorageMethodExist($method){
@@ -156,6 +152,18 @@ class Handler{
         return in_array($view,$this->views);
     }
 
+
+
+    /**
+     * @param $model
+     */
+    private function initModel($model)
+    {
+        $class = $this->models_namespace . $model;
+        $this->model = new $class;
+    }
+
+
     /**
      * @return array
      */
@@ -165,13 +173,12 @@ class Handler{
         return $the_request;
     }
 
-    /**
-     * @param $model
-     */
-    private function initModel($model)
-    {
-        $class = $this->models_namespace . $model;
-        $this->model = new $class;
+    public function loadView(){
+        $view = $this->view.'.twig';
+        if($view != 'errors/404.twig' && !file_exists(STORE_VIEWS.DS.$view)){
+            $view = 'errors/501.twig';
+        }
+       echo $this->template->render($view);
     }
 
 }
