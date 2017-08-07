@@ -10,5 +10,6 @@ trait toJson{
 
     public function printOutput(){
         echo $this->output();
+        exit();
     }
 }

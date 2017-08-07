@@ -29,12 +29,7 @@ $app = new \App\Handler($storage);
 $response = $app->handle();
 
 
-if($response instanceof \App\Core\ApiResponse){
-    return $app->printOutput();
-}
+if($response instanceof \App\Core\ApiResponse) $response->printOutput();
 
 
 $app->loadView();
-
-
-
