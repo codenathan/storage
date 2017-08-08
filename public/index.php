@@ -15,14 +15,13 @@ defined('STORE_DEBUG') or define('STORE_DEBUG', true);
 defined('STORE_VIEWS') or define('STORE_VIEWS', $root.DS.'views');
 
 defined('STORE_FOLDER') or define('STORE_FOLDER', $root.DS.'storage'.DS);
-defined('STORE_CACHE') or define('STORE_CACHE', $root.DS.'storage'.DS.'cache');
-defined('STORE_DATA') or define('STORE_DATA', $root.DS.'storage'.DS.'data');
+defined('STORE_CACHE') or define('STORE_CACHE', $root.DS.'storage'.DS.'cache'.DS);
+defined('STORE_DATA') or define('STORE_DATA', $root.DS.'storage'.DS.'data'.DS);
 
 if(STORE_DEBUG){
     error_reporting(E_ALL);
     ini_set('display_errors', 1);
 }
-
 
 
 
@@ -39,9 +38,9 @@ if($app->isApiRequest()) {
         $storage = new \App\Services\FileStorage($app->model);
         //$storage = new \App\Services\DatabaseStorage($app->model);
 
-        $api = new \App\Core\Api($storage);
-        $response = $api->{$app->method}(); //Response will always be an instance of ApiResponse
+        $response = (new \App\Core\Api($storage))->{$app->method}();
     }
+
 
     $response->printOutput();
 }

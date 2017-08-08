@@ -19,31 +19,33 @@ class Api{
         $this->storage = $storage;
         $this->model = $model;
         $this->model_name = $model_name;
+
+        return $this;
     }
 
     /**
      * HTTP Verbs - GET
      */
     public function index(){
-        $this->storage->index($this->model_name);
+       return $this->storage->index();
     }
 
     /**
      * HTTP Verbs - POST
      */
     public function create(){
-        $this->validate($this->model->get_validation());
+        $this->validate();
     }
 
-    public function show(){
-        $this->storage->find($this->model->ID);
+    public function show($id){
+        $this->storage->find($id);
     }
 
     /**
      * HTTP Verbs - PUT / PATCH
      */
     public function update(){
-        $this->validate($this->model->get_validation());
+      //  $this->validate();
     }
 
     /**

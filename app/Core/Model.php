@@ -14,12 +14,14 @@ abstract class Model{
 
     abstract public function get_validation();
 
+    abstract public function getRequiredFields();
+
     /**
      * @return string
      */
     abstract public function getModelName();
 
     public function properties(){
-        return get_object_vars($this);
+        return array_keys(get_object_vars($this));
     }
 }

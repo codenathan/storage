@@ -66,4 +66,9 @@ class User extends Model {
     {
         return 'User';
     }
+
+    public function getRequiredFields()
+    {
+       return ['user'];
+    }
 }
