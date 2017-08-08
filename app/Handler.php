@@ -11,19 +11,43 @@ class Handler{
     private $models_namespace = '\App\Models\\';
     private $interface_namespace = '\App\Interfaces\\';
 
+    /**
+     * Contains the request that comes through the query string
+     * @var null | string
+     */
     public $request;
 
     /**
+     * The twig environment container
      * @var null | \Twig_Environment
      */
     public $template;
 
+    /**
+     * Container for the model
+     * @var null | Model
+     */
     public $model;
 
+
+    /**
+     * Specifies the method name which we need to call
+     * @var string
+     */
     public $method;
 
+
+    /**
+     * A list of allowed views
+     * @var array
+     */
     public $views = ['index','create','edit'];
 
+
+    /**
+     * This string holds the view that should be rendered
+     * @var string
+     */
     public $view = 'errors/404';
 
 
@@ -45,6 +69,24 @@ class Handler{
 
     }
 
+    /**
+     * The starting point for handling all requests
+     * @return ApiResponse
+     */
+    public function handle(){
+
+        if($this->isApiRequest()){
+            return $this->handleApiRequest();
+        }
+
+
+        $this->handleRegularRequest();
+
+    }
+
+    /**
+     * Setting required variables for API Requests
+     */
     private function mapApiRequest(){
         $the_request = $this->returnRequestSplit();
 
@@ -61,6 +103,10 @@ class Handler{
         $this->method = $method;
     }
 
+
+    /**
+     * Setting required variables for regular Requests
+     */
     private function mapRegularRequest(){
 
         $the_request = $this->returnRequestSplit();
@@ -81,18 +127,10 @@ class Handler{
 
     }
 
-    public function handle(){
 
-        if($this->isApiRequest()){
-            return $this->handleApiRequest();
-        }
-
-
-        $this->handleRegularRequest();
-
-    }
 
     /**
+     * Process the API Response Data
      * @return ApiResponse
      */
     private function handleApiRequest()
@@ -116,6 +154,9 @@ class Handler{
         return $response;
     }
 
+    /**
+     * Process the regular request template / data
+     */
     private function handleRegularRequest(){
         $loader = new \Twig_Loader_Filesystem(STORE_VIEWS);
         $this->template = new \Twig_Environment($loader, array('cache' => STORE_CACHE,'debug' => STORE_DEBUG));
@@ -129,11 +170,6 @@ class Handler{
     }
 
 
-    /**
-     * Checks if model exists
-     * @param $model string
-     * @return bool
-     */
     public function doesModelExist($model){
 
         return class_exists($this->models_namespace.$model);
@@ -148,7 +184,6 @@ class Handler{
     private function isViewAllowed($view){
         return in_array($view,$this->views);
     }
-
 
 
     /**
