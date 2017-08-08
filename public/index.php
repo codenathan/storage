@@ -24,7 +24,7 @@ if(STORE_DEBUG){
 //$storage = new \App\Services\DatabaseStorage();
 $storage = new \App\Services\FileStorage();
 
-$app = new \App\Handler($storage);
+$app = new \App\Handler();
 
 $response = $app->handle();
 

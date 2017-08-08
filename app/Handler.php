@@ -14,8 +14,6 @@ class Handler{
 
     public $request;
 
-    public $storage;
-
     /**
      * @var null | \Twig_Environment
      */
@@ -36,10 +34,10 @@ class Handler{
      * Handler constructor.
      * @param iStorage $storage
      */
-    public function __construct(iStorage $storage)
+    public function __construct()
     {
         $this->request = $_GET['request'];
-        $this->storage = $storage;
+
 
         if($this->isApiRequest()) {
             $this->mapApiRequest();
