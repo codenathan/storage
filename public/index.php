@@ -31,5 +31,4 @@ $response = $app->handle();
 
 if($response instanceof \App\Core\ApiResponse) $response->printOutput();
 
-
-$app->loadView();
+if($app->template instanceof Twig_Environment) $app->loadView();

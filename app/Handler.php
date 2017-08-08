@@ -88,7 +88,7 @@ class Handler{
         }
 
 
-        return $this->handleRegularRequest();
+        $this->handleRegularRequest();
 
     }
 
@@ -120,7 +120,7 @@ class Handler{
         $loader = new \Twig_Loader_Filesystem(STORE_VIEWS);
         $this->template = new \Twig_Environment($loader, array('cache' => STORE_CACHE,'debug' => STORE_DEBUG));
 
-        return $this->template;
+        $this->template;
     }
 
 
