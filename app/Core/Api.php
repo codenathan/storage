@@ -6,6 +6,8 @@ use App\Interfaces\iStorage;
 
 class Api{
 
+    //TODO : get request headers for post
+
     public $storage;
 
     public $model;
