@@ -38,7 +38,9 @@ if($app->isApiRequest()) {
         $storage = new \App\Services\FileStorage($app->model);
         //$storage = new \App\Services\DatabaseStorage($app->model);
 
-        $response = (new \App\Core\Api($storage))->{$app->method}();
+        $return = (new \App\Core\Api($storage))->{$app->method}(); // This response should always be an instance of ApiResponse
+
+        if($return instanceof \App\Core\ApiResponse) $response = $return;
     }
 
 
