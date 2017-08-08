@@ -57,7 +57,7 @@ class User extends Model {
     public $dateOfBirth;
 
 
-    protected function get_validation()
+    public function get_validation()
     {
         // TODO: Implement get_validation() method.
     }

@@ -8,7 +8,7 @@ use App\Interfaces\iStorage;
 class FileStorage extends Storage implements iStorage{
 
 
-    public function index()
+    public function index($model_name)
     {
         // TODO: Implement index() method.
     }

@@ -7,7 +7,7 @@ use App\Interfaces\iStorage;
 
 class DatabaseStorage extends Storage implements iStorage{
 
-    public function index()
+    public function index($model_name)
     {
         // TODO: Implement index() method.
     }

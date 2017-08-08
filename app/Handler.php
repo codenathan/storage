@@ -4,7 +4,6 @@ namespace App;
 
 use App\Core\ApiResponse;
 use App\Core\Model;
-use App\Interfaces\iStorage;
 
 class Handler{
 
@@ -30,10 +29,7 @@ class Handler{
 
     const MODEL_NOT_FOUND = 'the data model you are looking for does not exist';
 
-    /**
-     * Handler constructor.
-     * @param iStorage $storage
-     */
+
     public function __construct()
     {
         $this->request = isset($_GET['request']) ? $_GET['request'] : null;
