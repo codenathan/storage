@@ -34,7 +34,7 @@ class Api{
     }
 
     public function show(){
-
+        $this->storage->find($this->model->ID);
     }
 
     /**

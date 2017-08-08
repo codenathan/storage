@@ -61,4 +61,9 @@ class User extends Model {
     {
         // TODO: Implement get_validation() method.
     }
+
+    public function getModelName()
+    {
+        return 'User';
+    }
 }
