@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Core\Model;
 
-class user extends Model {
+class User extends Model {
 
     /**
      * Alphanumeric with hyphen and underscore only
@@ -57,4 +57,8 @@ class user extends Model {
     public $dateOfBirth;
 
 
+    protected function get_validation()
+    {
+        // TODO: Implement get_validation() method.
+    }
 }
