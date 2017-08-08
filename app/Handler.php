@@ -1,10 +1,14 @@
 <?php
 
 namespace App;
-
-use App\Core\ApiResponse;
 use App\Core\Model;
 
+/**
+ * This handles the request query string and maps the model / method for API Requests and model/views for all other requests
+ *
+ * Class Handler
+ * @package App
+ */
 class Handler{
 
 
@@ -21,20 +25,20 @@ class Handler{
      * The twig environment container
      * @var null | \Twig_Environment
      */
-    public $template;
+    public $template = null;
 
     /**
      * Container for the model
      * @var null | Model
      */
-    public $model;
+    public $model = null;
 
 
     /**
      * Specifies the method name which we need to call
-     * @var string
+     * @var string | null
      */
-    public $method;
+    public $method = null;
 
 
     /**
@@ -51,6 +55,8 @@ class Handler{
     public $view = 'errors/404';
 
 
+    public $data = array();
+
     const MODEL_NOT_FOUND = 'the data model you are looking for does not exist';
 
 
@@ -60,34 +66,21 @@ class Handler{
 
 
         if($this->isApiRequest()) {
-            $this->mapApiRequest();
+            $this->setApiRequestModelMethod();
         }if(is_null($this->request)){
             $this->view = 'index';
         }else{
-            $this->mapRegularRequest();
+            $this->setRegularRequestModelView();
+
         }
 
     }
 
-    /**
-     * The starting point for handling all requests
-     * @return ApiResponse
-     */
-    public function handle(){
-
-        if($this->isApiRequest()){
-            return $this->handleApiRequest();
-        }
-
-
-        $this->handleRegularRequest();
-
-    }
 
     /**
-     * Setting required variables for API Requests
+     * Setting model/method variables for API Requests
      */
-    private function mapApiRequest(){
+    private function setApiRequestModelMethod(){
         $the_request = $this->returnRequestSplit();
 
         $model = isset($the_request[1]) && (is_string($the_request[1])) ? ucwords(strtolower($the_request[1])) : null;
@@ -105,9 +98,9 @@ class Handler{
 
 
     /**
-     * Setting required variables for regular Requests
+     * Setting model / view for Regular Request
      */
-    private function mapRegularRequest(){
+    private function setRegularRequestModelView(){
 
         $the_request = $this->returnRequestSplit();
 
@@ -123,41 +116,16 @@ class Handler{
 
 
         $this->view = strtolower($model).'/'.$view;
-
+        $this->initTemplateEngine();
 
     }
 
 
-
-    /**
-     * Process the API Response Data
-     * @return ApiResponse
-     */
-    private function handleApiRequest()
-    {
-        $response = new ApiResponse();
-
-        if ($this->model instanceof Model) {
-            $response->status_code = ApiResponse::HTTP_OK;
-            $response->error        = [];
-            $response->success      = true;
-            $response->response     = $this->model;
-
-            //TODO : create api bridge to load data
-
-        } else {
-            $response->status_code = ApiResponse::HTTP_BAD_REQUEST;
-            $response->error[] = self::MODEL_NOT_FOUND;
-        }
-
-
-        return $response;
-    }
 
     /**
      * Process the regular request template / data
      */
-    private function handleRegularRequest(){
+    private function initTemplateEngine(){
         $loader = new \Twig_Loader_Filesystem(STORE_VIEWS);
         $this->template = new \Twig_Environment($loader, array('cache' => STORE_CACHE,'debug' => STORE_DEBUG));
 
@@ -176,6 +144,7 @@ class Handler{
     }
 
     private function doesStorageMethodExist($method){
+        $method = strtolower($method);
         $storage_interface = $this->interface_namespace.'iStorage';
         $storage_methods = get_class_methods($storage_interface);
         return in_array($method,$storage_methods);
@@ -205,12 +174,12 @@ class Handler{
         return $the_request;
     }
 
-    public function loadView(){
+    public function loadView($data = []){
         $view = $this->view.'.twig';
         if($view != 'errors/404.twig' && !file_exists(STORE_VIEWS.DS.$view)){
             $view = 'errors/501.twig';
         }
-       echo $this->template->render($view);
+       echo $this->template->render($view,$data);
     }
 
 }

@@ -4,7 +4,7 @@ namespace App\Interfaces;
 
 interface iStorage{
 
-    public function index($model_name);
+    public function index();
 
     public function save($data);
 

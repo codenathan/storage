@@ -21,14 +21,27 @@ if(STORE_DEBUG){
     ini_set('display_errors', 1);
 }
 
-//$storage = new \App\Services\DatabaseStorage();
-$storage = new \App\Services\FileStorage();
+
+
 
 $app = new \App\Handler();
 
-$response = $app->handle();
+
+if($app->isApiRequest()) {
+
+    $response = new \App\Core\ApiResponse();
+
+    if(is_string($app->method) && $app->model instanceof \App\Core\Model){
 
 
-if($response instanceof \App\Core\ApiResponse) $response->printOutput();
+        $storage = new \App\Services\FileStorage($app->model);
+        //$storage = new \App\Services\DatabaseStorage($app->model);
+
+        $api = new \App\Core\Api($storage);
+        $response = $api->{$app->method}(); //Response will always be an instance of ApiResponse
+    }
+
+    $response->printOutput();
+}
 
 if($app->template instanceof Twig_Environment) $app->loadView();

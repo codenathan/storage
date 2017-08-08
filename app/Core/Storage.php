@@ -3,19 +3,14 @@
 
 abstract class Storage{
 
+    /**
+     * @var Model
+     */
     public $model;
 
-    /**
-     * @return null | Model
-     */
-    public function getModel()
+    public function __construct(Model $model)
     {
-        // TODO: Implement getModel() method.
-    }
-
-    public function setModel(Model $model)
-    {
-        $this->model = $model;
+        $this->model;
     }
 
 }
