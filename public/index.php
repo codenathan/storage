@@ -13,8 +13,10 @@ $root = realpath(__DIR__.'/../');
 defined('DS')          or define('DS',DIRECTORY_SEPARATOR);
 defined('STORE_DEBUG') or define('STORE_DEBUG', true);
 defined('STORE_VIEWS') or define('STORE_VIEWS', $root.DS.'views');
-defined('STORE_CACHE') or define('STORE_CACHE', $root.DS.'storage'.DS.'cache');
 
+defined('STORE_FOLDER') or define('STORE_FOLDER', $root.DS.'storage'.DS);
+defined('STORE_CACHE') or define('STORE_CACHE', $root.DS.'storage'.DS.'cache');
+defined('STORE_DATA') or define('STORE_DATA', $root.DS.'storage'.DS.'data');
 
 if(STORE_DEBUG){
     error_reporting(E_ALL);
