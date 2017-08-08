@@ -36,11 +36,13 @@ class Handler{
      */
     public function __construct()
     {
-        $this->request = $_GET['request'];
+        $this->request = isset($_GET['request']) ? $_GET['request'] : null;
 
 
         if($this->isApiRequest()) {
             $this->mapApiRequest();
+        }if(is_null($this->request)){
+            $this->view = 'index';
         }else{
             $this->mapRegularRequest();
         }
@@ -64,6 +66,7 @@ class Handler{
     }
 
     private function mapRegularRequest(){
+
         $the_request = $this->returnRequestSplit();
 
         $model = isset($the_request[0]) && (is_string($the_request[0])) ? ucwords(strtolower($the_request[0])) : null;
