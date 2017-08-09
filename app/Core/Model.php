@@ -12,6 +12,9 @@ abstract class Model{
 
     public $created_at;
 
+    /**
+     * @return array
+     */
     abstract public function get_validation();
 
     abstract public function getRequiredFields();

@@ -59,7 +59,12 @@ class User extends Model {
 
     public function get_validation()
     {
-        // TODO: Implement get_validation() method.
+        return [
+            'username'          => '/^[a-zA-Z0-9-_]+$/',
+            'first_name'        => '/^[a-z0-9 .\-]+$/i',
+            'middleInitial'     => '/^[a-zA-Z]$/',
+
+        ];
     }
 
     public function getModelName()
