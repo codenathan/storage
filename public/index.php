@@ -1,5 +1,12 @@
 <?php
 
+session_start();
+
+if (empty($_SESSION['token'])) {
+    $_SESSION['token'] = bin2hex(random_bytes(32));
+}
+
+
 require __DIR__.'/../vendor/autoload.php';
 
 
@@ -46,5 +53,6 @@ if($app->isApiRequest()) {
 
     $response->printOutput();
 }
+
 
 if($app->template instanceof Twig_Environment) $app->loadView();

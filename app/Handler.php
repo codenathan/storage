@@ -69,6 +69,7 @@ class Handler{
             $this->setApiRequestModelMethod();
         }if(is_null($this->request)){
             $this->view = 'index';
+            $this->initTemplateEngine();
         }else{
             $this->setRegularRequestModelView();
 
@@ -175,11 +176,26 @@ class Handler{
     }
 
     public function loadView($data = []){
+        $data = $this->addViewHeaderVariables($data);
+
         $view = $this->view.'.twig';
         if($view != 'errors/404.twig' && !file_exists(STORE_VIEWS.DS.$view)){
             $view = 'errors/501.twig';
         }
+
+
        echo $this->template->render($view,$data);
+    }
+
+    public function checkifMethodAllowed(){
+
+    }
+
+    private function addViewHeaderVariables(array $data){
+
+        $data['token'] = $_SESSION['token'];
+
+        return $data;
     }
 
 }
