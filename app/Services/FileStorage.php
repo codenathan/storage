@@ -91,4 +91,9 @@ class FileStorage extends Storage implements iStorage{
         $mapped_data = $this->mapData($decode_data);
         return $mapped_data;
     }
+
+    public function getNextAvailableID(){
+       return (max(array_keys($this->getAllData())))+1;
+
+    }
 }

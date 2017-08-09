@@ -19,7 +19,7 @@ class Handler{
      * Contains the request that comes through the query string
      * @var null | string
      */
-    public $request;
+    public $query_string;
 
     /**
      * The twig environment container
@@ -62,12 +62,17 @@ class Handler{
 
     public function __construct()
     {
-        $this->request = isset($_GET['request']) ? $_GET['request'] : null;
+        $this->query_string = isset($_GET['qs']) ? $_GET['qs'] : null;
+
 
 
         if($this->isApiRequest()) {
+
+            $this->isMethodAllowed();
+            $this->verifyToken();
             $this->setApiRequestModelMethod();
-        }if(is_null($this->request)){
+
+        }if(is_null($this->query_string)){
             $this->view = 'index';
             $this->initTemplateEngine();
         }else{
@@ -152,7 +157,7 @@ class Handler{
 
 
     public function isApiRequest(){
-        return substr( $this->request, 0, 4 ) === "api/";
+        return substr( $this->query_string, 0, 4 ) === "api/";
     }
 
 
@@ -193,7 +198,7 @@ class Handler{
      */
     private function returnRequestSplit()
     {
-        $the_request = explode('/', $this->request);
+        $the_request = explode('/', $this->query_string);
         return $the_request;
     }
 
@@ -209,7 +214,17 @@ class Handler{
        echo $this->template->render($view,$data);
     }
 
-    public function checkifMethodAllowed(){
+    /**
+     * Checks if the method is allowed
+     */
+    public function isMethodAllowed(){
+
+    }
+
+    /**
+     * Checks if the data has been tampered with
+     */
+    public function verifyToken(){
 
     }
 
