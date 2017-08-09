@@ -14,11 +14,10 @@ class Api{
 
     public $model_name;
 
-    public function __construct(iStorage $storage,Model $model = null,$model_name = null)
+    public function __construct(iStorage $storage)
     {
         $this->storage = $storage;
-        $this->model = $model;
-        $this->model_name = $model_name;
+        $this->model = $storage->model;
 
         return $this;
     }
@@ -34,11 +33,11 @@ class Api{
      * HTTP Verbs - POST
      */
     public function create(){
-        $this->validate();
+        $this->validate([]);
     }
 
-    public function show($id){
-        $this->storage->find($id);
+    public function show(){
+        return $this->storage->find();
     }
 
     /**
@@ -60,6 +59,8 @@ class Api{
         foreach($this->model->properties() as $property){
             //TODO : Implement validation for models here
         }
+
+        return false;
 
     }
 

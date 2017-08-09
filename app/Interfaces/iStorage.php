@@ -6,10 +6,10 @@ interface iStorage{
 
     public function index();
 
-    public function save($data);
+    public function save();
 
-    public function find($data);
+    public function find();
 
-    public function delete($data);
+    public function delete();
 
 }

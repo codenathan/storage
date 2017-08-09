@@ -1,6 +1,7 @@
 <?php
 
 namespace App;
+use App\Core\Api;
 use App\Core\Model;
 
 /**
@@ -13,7 +14,6 @@ class Handler{
 
 
     private $models_namespace = '\App\Models\\';
-    private $interface_namespace = '\App\Interfaces\\';
 
     /**
      * Contains the request that comes through the query string
@@ -75,6 +75,7 @@ class Handler{
 
         }
 
+
     }
 
 
@@ -82,6 +83,7 @@ class Handler{
      * Setting model/method variables for API Requests
      */
     private function setApiRequestModelMethod(){
+
         $the_request = $this->returnRequestSplit();
 
         $model = isset($the_request[1]) && (is_string($the_request[1])) ? ucwords(strtolower($the_request[1])) : null;
@@ -90,9 +92,24 @@ class Handler{
 
         $this->initModel($model);
 
-        $method = isset($the_request[2]) && is_string($the_request[2]) ? ucwords(strtolower($the_request[2])) : null;
+        $model_id = isset($the_request[2]) && is_numeric($the_request[2]) ? $the_request[2] : null;
 
-        if(!$this->doesStorageMethodExist($method)) return;
+        if($model_id){
+            $this->model->ID = $model_id;
+
+            $show = !isset($the_request[3]) ? true : false;
+
+            $delete = isset($the_request[4]) && $the_request[4] == 'delete' ? true : false;
+
+            $method = $delete ? 'delete' : $show ? 'show' : 'update';
+
+
+        }else{
+            $method = isset($the_request[2]) && is_string($the_request[2]) ? ucwords(strtolower($the_request[2])) : null;
+        }
+
+
+        if(!$this->doesAPiMethodExist($method)) return;
 
         $this->method = $method;
     }
@@ -144,11 +161,16 @@ class Handler{
         return class_exists($this->models_namespace.$model);
     }
 
-    private function doesStorageMethodExist($method){
+    private function doesAPiMethodExist($method){
         $method = strtolower($method);
-        $storage_interface = $this->interface_namespace.'iStorage';
-        $storage_methods = get_class_methods($storage_interface);
-        return in_array($method,$storage_methods);
+
+        $api_methods = (new \ReflectionClass(Api::class))->getMethods(\ReflectionMethod::IS_PUBLIC);
+
+        $api_method_names = array_column($api_methods,'name');
+
+        unset($api_method_names['__construct']);
+
+        return in_array($method,$api_method_names);
     }
 
     private function isViewAllowed($view){

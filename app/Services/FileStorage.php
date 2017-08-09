@@ -16,40 +16,46 @@ class FileStorage extends Storage implements iStorage{
      */
     public function index()
     {
-        $files = glob($this->getModelFolder().'*.json');
-
-        foreach($files as $file){
-            $read_file = $this->openFile($file);
-            $decode_data = (array) json_decode($read_file);
-            $this->data[] = $this->mapData($decode_data);
-        }
+        $this->getAllData();
 
         return $this->returnSuccessResponse($this->data);
     }
 
-    public function save($data)
+    public function save()
     {
+        $json = json_encode($this->model);
+        file_put_contents($this->getModelFolder().$this->model->ID.'.json',$json);
+    }
+
+    public function find()
+    {
+        $file = $this->getModelFolder().$this->model->ID.'.json';
+
+
+        if(file_exists($file)){
+            $data =  $this->returnObject($file);
+
+            return $this->returnSuccessResponse($data);
+        }
+
+        return $this->returnNotFoundResponse();
 
     }
 
-    public function find($data)
+    public function delete()
     {
-        // TODO: Implement find() method.
-    }
+        $file = $this->getModelFolder().$this->model->ID.'.json';
 
-    public function delete($data)
-    {
-        // TODO: Implement delete() method.
-    }
+        if(file_exists($file)){
+            unlink($file);
+            return $this->returnSuccessResponse();
+        }
 
+        return $this->returnNotFoundResponse();
+    }
 
     private function getModelFolder(){
         return STORE_DATA.$this->model->getModelName().DS;
-    }
-
-    private function saveData(Model $model){
-        $json = json_encode($model);
-        file_put_contents($this->getModelFolder().$model->ID.'.json',$json);
     }
 
     private function openFile($file){
@@ -67,19 +73,22 @@ class FileStorage extends Storage implements iStorage{
         return $model;
     }
 
-    public function testCreate(){
-        $user = new User();
-        $user->username     = 'shakesnathan';
-        $user->ID           = 1;
-        $user->title        = 'Mr';
-        $user->firstName    = 'Shakes';
-        $user->lastName     = 'Nathan';
-        $user->gender       = 'M';
-        $user->created_at   = Carbon::now()->toDateTimeString();
+    private function getAllData(){
+        $files = glob($this->getModelFolder().'*.json');
 
-        $this->saveData($user);
+        foreach($files as $file){
+            $mapped_data = $this->returnObject($file);
+            $this->data[$mapped_data->ID] = $mapped_data;
+        }
+
+        return $this->data;
     }
 
-
-
+    private function returnObject($file): Model
+    {
+        $read_file = $this->openFile($file);
+        $decode_data = (array)json_decode($read_file);
+        $mapped_data = $this->mapData($decode_data);
+        return $mapped_data;
+    }
 }

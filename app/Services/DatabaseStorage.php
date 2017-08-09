@@ -12,18 +12,20 @@ class DatabaseStorage extends Storage implements iStorage{
         // TODO: Implement index() method.
     }
 
-    public function save($data)
+    public function save()
     {
         // TODO: Implement save() method.
     }
 
-    public function find($data)
+    public function find()
     {
         // TODO: Implement find() method.
     }
 
-    public function delete($data)
+    public function delete()
     {
         // TODO: Implement delete() method.
     }
+
+
 }

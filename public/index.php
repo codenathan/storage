@@ -41,7 +41,6 @@ if($app->isApiRequest()) {
 
     if(is_string($app->method) && $app->model instanceof \App\Core\Model){
 
-
         $storage = new \App\Services\FileStorage($app->model);
         //$storage = new \App\Services\DatabaseStorage($app->model);
 
