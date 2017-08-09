@@ -12,6 +12,8 @@ abstract class Model{
 
     public $created_at;
 
+    public $hash; //for security when updating records
+
     /**
      * @return array
      */
