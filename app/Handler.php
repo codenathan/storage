@@ -277,6 +277,7 @@ class Handler{
 
     private function addViewHeaderVariables(){
         $this->view_data['token'] = $_SESSION['token'];
+        $this->view_data['STORE_DEBUG'] = STORE_DEBUG;
     }
 
     private function addViewData($label,$value){
