@@ -6,7 +6,6 @@ use App\Core\Model;
 
 /**
  * This handles the request query string and maps the model / method for API Requests and model/views for all other requests
- *
  * Class Handler
  * @package App
  */
@@ -20,6 +19,12 @@ class Handler{
      * @var null | string
      */
     public $query_string;
+
+    /*
+     * Stores the request method
+     * @var null | string
+     */
+    public $request_method;
 
     /**
      * The twig environment container
@@ -57,6 +62,18 @@ class Handler{
 
     public $data = array();
 
+    /**
+     * Property that holds if the method is allowed ( API Request only)
+     * @var boolean
+     */
+    public $method_allowed = false;
+
+    /**
+     * Property that holds if the method is verified ( API and Non GET Requests)
+     * @var boolean
+     */
+    public $verified_token = false;
+
     const MODEL_NOT_FOUND = 'the data model you are looking for does not exist';
 
 
@@ -65,12 +82,12 @@ class Handler{
         $this->query_string = isset($_GET['qs']) ? $_GET['qs'] : null;
 
 
-
         if($this->isApiRequest()) {
 
-            $this->isMethodAllowed();
-            $this->verifyToken();
             $this->setApiRequestModelMethod();
+            $this->isMethodAllowed();
+
+            if($this->request_method != 'get') $this->verifyToken();
 
         }if(is_null($this->query_string)){
             $this->view = 'index';
@@ -91,11 +108,11 @@ class Handler{
 
         $the_request = $this->returnRequestSplit();
 
-        $model = isset($the_request[1]) && (is_string($the_request[1])) ? ucwords(strtolower($the_request[1])) : null;
+        $model_name = isset($the_request[1]) && (is_string($the_request[1])) ? ucwords(strtolower($the_request[1])) : null;
 
-        if(!$this->doesModelExist($model)) return;
+        if(!$this->doesModelExist($model_name)) return;
 
-        $this->initModel($model);
+        $this->initModel($model_name);
 
         $model_id = isset($the_request[2]) && is_numeric($the_request[2]) ? $the_request[2] : null;
 
@@ -127,18 +144,18 @@ class Handler{
 
         $the_request = $this->returnRequestSplit();
 
-        $model = isset($the_request[0]) && (is_string($the_request[0])) ? ucwords(strtolower($the_request[0])) : null;
+        $model_name = isset($the_request[0]) && (is_string($the_request[0])) ? ucwords(strtolower($the_request[0])) : null;
 
-        if(!$this->doesModelExist($model)) return;
+        if(!$this->doesModelExist($model_name)) return;
 
-        $this->initModel($model);
+        $this->initModel($model_name);
 
         $view = isset($the_request[1]) && (is_string($the_request[1])) ? strtolower($the_request[1]) : null;
 
         if(!$this->isViewAllowed($view)) return;
 
 
-        $this->view = strtolower($model).'/'.$view;
+        $this->view = strtolower($model_name).'/'.$view;
         $this->initTemplateEngine();
 
     }
@@ -183,12 +200,9 @@ class Handler{
     }
 
 
-    /**
-     * @param $model
-     */
-    private function initModel($model)
+    private function initModel($model_name)
     {
-        $class = $this->models_namespace . $model;
+        $class = $this->models_namespace . $model_name;
         $this->model = new $class;
     }
 
@@ -218,14 +232,27 @@ class Handler{
      * Checks if the method is allowed
      */
     public function isMethodAllowed(){
+        $this->request_method = isset($_POST['_method']) ? $_POST['_method'] : strtolower($_SERVER['REQUEST_METHOD']);
+
+        $method_request_method_mapping = [
+            'get'       => ['index','show'],
+            'post'      => ['create'],
+            'put'       => ['update'],
+            'patch'     => ['update'],
+            'delete'    => ['delete']
+        ];
+
+        if(!in_array($this->request_method,array_keys($method_request_method_mapping))) $this->method_allowed =  false;
+
+        $this->method_allowed = in_array(strtolower($this->method),$method_request_method_mapping[$this->request_method]);
 
     }
 
     /**
-     * Checks if the data has been tampered with
+     * Checks if the data has been tampered with, only required for non get request
      */
     public function verifyToken(){
-
+        $this->verified_token = (isset($_SESSION['token']) && $_SESSION['token'] && isset($_POST['token'])) && ($_POST['token'] == $_SESSION['token']);
     }
 
     private function addViewHeaderVariables(array $data){
@@ -234,5 +261,7 @@ class Handler{
 
         return $data;
     }
+
+
 
 }

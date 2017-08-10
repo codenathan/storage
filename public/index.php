@@ -31,7 +31,6 @@ if(STORE_DEBUG){
 }
 
 
-
 $app = new \App\Handler();
 
 
@@ -40,6 +39,9 @@ if($app->isApiRequest()) {
     $response = new \App\Core\ApiResponse();
 
     if(is_string($app->method) && $app->model instanceof \App\Core\Model){
+
+        if(!$app->method_allowed) $response->applyInvalidMethod();
+        if($app->request_method != 'get' &&  $app->verified_token == false) $response->applyInvalidToken();
 
         $storage = new \App\Services\FileStorage($app->model);
         //$storage = new \App\Services\DatabaseStorage($app->model);

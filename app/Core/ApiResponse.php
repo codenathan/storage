@@ -9,6 +9,7 @@ class ApiResponse{
 
     const HTTP_OK                       = 200; // OK - Everything went well
     const HTTP_BAD_REQUEST              = 400; // Bad Request - Server does not understand what we mean
+    const UNAUTHORIZED                  = 401; // Unauthorized - Someone has tampered with the data
     const HTTP_METHOD_NOT_ALLOWED       = 405; // Method Not Allowed - Trying a get on a post method
     const HTTP_NOT_FOUND                = 404; // NOT FOUND - The request methods do not exist
 
@@ -42,13 +43,30 @@ class ApiResponse{
      * @param $success
      * @param $status_code
      * @param $response
+     * @param $error
      */
-    public function __construct($success = false, $response = null, $status_code = 404)
+    public function __construct($success = false,array $response = null, $status_code = 404,array $error = null)
     {
         $this->success      = $success;
         $this->status_code  = $status_code;
         $this->response     = $response;
 
+    }
+
+    public function applyInvalidMethod(){
+        $this->success      = false;
+        $this->status_code  = self::HTTP_METHOD_NOT_ALLOWED;
+        $this->error        = [ 'You have made an invalid request'];
+        $this->response     = [];
+        $this->printOutput();
+    }
+
+    public function applyInvalidToken(){
+        $this->success      = false;
+        $this->status_code  = self::UNAUTHORIZED;
+        $this->error        = ['this is an unauthorized request'];
+        $this->response     = [];
+        $this->printOutput();
     }
 
 
