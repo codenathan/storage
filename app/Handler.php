@@ -112,7 +112,7 @@ class Handler{
 
         $the_request = $this->returnRequestSplit();
 
-        $model_name = isset($the_request[1]) && (is_string($the_request[1])) ? ucwords(strtolower($the_request[1])) : null;
+        $model_name = isset($the_request[1]) && (is_string($the_request[1])) && !empty($the_request[1]) ? ucwords(strtolower($the_request[1])) : null;
 
         if(!$this->doesModelExist($model_name)) return;
 
@@ -148,22 +148,23 @@ class Handler{
 
         $the_request = $this->returnRequestSplit();
 
-        $model_name = isset($the_request[0]) && (is_string($the_request[0])) ? ucwords(strtolower($the_request[0])) : null;
+        $model_name = isset($the_request[0]) && (is_string($the_request[0])) && !empty($the_request[0]) ? ucwords(strtolower($the_request[0])) : null;
 
         if(!$this->doesModelExist($model_name)) return;
 
         $this->initModel($model_name);
 
-        $view = isset($the_request[1]) && (is_string($the_request[1])) ? strtolower($the_request[1]) : null;
+
+        $view = isset($the_request[1]) && (is_string($the_request[1])) && !empty($the_request[1]) ? strtolower($the_request[1]) : 'index';
 
         if(!$this->isViewAllowed($view)) return;
 
        if($view == 'edit' && isset($the_request[2]) && is_numeric($the_request[2])) $this->addViewData('_id',$the_request[2]);
 
-       $this->addViewData('view',$view);
 
         $this->view = strtolower($model_name).'/'.$view;
         $this->initTemplateEngine();
+
 
     }
 
@@ -226,6 +227,8 @@ class Handler{
     public function loadView(){
 
         $this->addViewHeaderVariables();
+        $view = $this->model ? $this->model->getModelName().'.'.$this->view : $this->view;
+        $this->addViewData('view', $view);
 
         $view = $this->view.'.twig';
         if($view != 'errors/404.twig' && !file_exists(STORE_VIEWS.DS.$view)){
