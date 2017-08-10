@@ -7,15 +7,18 @@
         <router-view></router-view>
     </main>
 
+
     {% include "user/list.twig" %}
 
     {% include "user/show.twig" %}
 
-    {% include "user/add.twig" %}
+    {#
+        {% include "user/add.twig" %}
 
-    {% include "user/edit.twig" %}
+        {% include "user/edit.twig" %}
 
-    {% include "user/delete.twig" %}
+        {% include "user/delete.twig" %}
+     #}
 {% endblock %}
 
 {% block footer %}

@@ -1,4 +1,4 @@
-var users = [];
+var UsersList = [];
 var UserModel = {
 
     username        : '',
@@ -11,12 +11,12 @@ var UserModel = {
 };
 
 function findUser (user_id) {
-    return users[findUserID(user_id)];
+    return UsersList[findUserID(user_id)];
 };
 
 function findUserID (user_id) {
-    for (var key = 0; key < users.length; key++) {
-        if (users[key].id == user_id) {
+    for (var key = 0; key < UsersList.length; key++) {
+        if (UsersList[key].id == user_id) {
             return key;
         }
     }
@@ -25,7 +25,7 @@ function findUserID (user_id) {
 var List = Vue.extend({
     template: '#user-list',
     data: function () {
-        return {users: users, searchKey: ''};
+        return {users: UsersList, searchKey: ''};
     },
     mounted : function(){
         this.fetchUsers();
@@ -42,9 +42,10 @@ var List = Vue.extend({
     }
 });
 
-var User = Vue.extend({
-    template: '#user',
+var UserShow = Vue.extend({
+    template: '#user-show',
     data: function () {
+        console.log(this.$route.params);
         return {user: findUser(this.$route.params.user_id)};
     }
 });
@@ -57,7 +58,7 @@ var UserEdit = Vue.extend({
     methods: {
         updateUser: function () {
             var user = this.user;
-            users[findUserID(user.id)] = {
+            UsersList[findUserID(user.id)] = {
                 id              : user.id,
                 username        : user.username,
                 firstName       : user.firstName,
@@ -78,13 +79,13 @@ var UserDelete = Vue.extend({
     },
     methods: {
         deleteUser: function () {
-            users.splice(findUserID(this.$route.params.user_id), 1);
+            UsersList.splice(findUserID(this.$route.params.user_id), 1);
             router.push('/');
         }
     }
 });
 
-var AddUser = Vue.extend({
+var UserCreate = Vue.extend({
     template: '#add-user',
     data: function () {
         return {user: UserModel }
@@ -95,7 +96,7 @@ var AddUser = Vue.extend({
 
             var user = this.user;
 
-            users.push({
+            UsersList.push({
                 id              : user.id,
                 username        : user.username,
                 firstName       : user.firstName,
@@ -117,11 +118,13 @@ Vue.filter('formatDate', function(value) {
 
 var router = new VueRouter({routes:[
     { path: '/', component: List},
-    { path: '/user/:user_id', component: User, name: 'user'},
-    { path: '/add-user', component: AddUser},
+    { path: '/user/:user_id', component: UserShow, name: 'user-show'},
+    { path: '/add-user', component: UserCreate},
     { path: '/user/:user_id/edit', component: UserEdit, name: 'user-edit'},
     { path: '/user/:user_id/delete', component: UserDelete, name: 'user-delete'}
 ]});
+
+Vue.config.debug = true;
 
 app = new Vue({
     router:router,

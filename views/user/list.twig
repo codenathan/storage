@@ -26,14 +26,14 @@
                 <tbody>
                 <tr v-for="user in users">
                     <td>
-                        <router-link v-bind:to=" { name: 'user', params: {user_id: user.id} }">{{ user.title }} {{ user.firstName }} {{ user.middleInitial }} {{ user.lastName }}</router-link>
+                        <router-link v-bind:to=" { name: 'user-show', params: { user_id : user.ID } }">{{ user.title }} {{ user.firstName }} {{ user.middleInitial }} {{ user.lastName }}</router-link>
                     </td>
                     <td>{{ user.username }}</td>
                     <td>{{ user.gender }}</td>
                     <td>{{ user.dateOfBirth | formatDate }}</td>
                     <td>
-                        <router-link class="btn btn-warning btn-xs" v-bind:to="{name: 'user-edit', params: {user_id: user.id}}">Edit</router-link>
-                        <router-link class="btn btn-danger btn-xs" v-bind:to="{name: 'user-delete', params: {user_id: user.id}}">Delete</router-link>
+                        <router-link class="btn btn-warning btn-xs" v-bind:to="{name: 'user-edit', params: {user_id: user.ID }}">Edit</router-link>
+                        <router-link class="btn btn-danger btn-xs" v-bind:to="{name: 'user-delete', params: {user_id: user.ID }}">Delete</router-link>
                     </td>
                 </tr>
                 </tbody>
