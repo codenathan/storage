@@ -1,10 +1,74 @@
 {% verbatim %}
     <template id="user-show">
         <div>
-            <h2>Hello</h2>
+          <div v-if="not_found"  class="alert alert-danger"> User Not Found !</div>
 
-            <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
-            <router-link v-bind:to="'/'">Back to user list</router-link>
+            <div v-else >
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Label</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ID</td>
+                            <td>{{ user.ID }}</td>
+                        </tr>
+
+                        <tr>
+                            <td>Username</td>
+                            <td>{{ user.username }} </td>
+                        </tr>
+
+                        <tr>
+                            <td>Title</td>
+                            <td>{{ user.title }} </td>
+                        </tr>
+
+                        <tr>
+                            <td>First Name</td>
+                            <td>{{ user.firstName }} </td>
+                        </tr>
+
+                        <tr>
+                            <td>Middle Initial</td>
+                            <td>{{ user.middleInitial }} </td>
+                        </tr>
+
+                        <tr>
+                            <td>Last Name</td>
+                            <td>{{ user.lastName }} </td>
+                        </tr>
+
+                        <tr>
+                            <td>Gender</td>
+                            <td>{{ user.gender }} </td>
+                        </tr>
+
+                        <tr>
+                            <td>Date Of Birth</td>
+                            <td>{{ user.dateOfBirth | formatDate }} </td>
+                        </tr>
+                        <tr>
+                            <td>Created</td>
+                            <td>{{ user.created_at | formatDateTime }} </td>
+                        </tr>
+                        <tr>
+                            <td>Last Updated</td>
+                            <td>{{ user.updated_at | formatDateTime }} </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+            </div>
+
+            <div>
+                <span class="fa fa-arrow-left" aria-hidden="true"></span>
+                <router-link v-bind:to="'/'">Back to user list</router-link>
+            </div>
         </div>
     </template>
 {% endverbatim %}

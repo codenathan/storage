@@ -1,13 +1,16 @@
 var UsersList = [];
 var UserModel = {
-
+    ID              : null,
     username        : '',
     title           : '',
     firstName       : '',
     middleInitial   : '',
     lastName        : '',
     gender          : '',
-    dateOfBirth     : ''
+    dateOfBirth     : '',
+    created_at      : '',
+    updated_at      : '',
+    hash            : ''
 };
 
 function findUser (user_id) {
@@ -44,9 +47,25 @@ var List = Vue.extend({
 
 var UserShow = Vue.extend({
     template: '#user-show',
+    mounted : function(){
+        this.fetchUser(this.$route.params.user_id);
+    },
     data: function () {
-        console.log(this.$route.params);
-        return {user: findUser(this.$route.params.user_id)};
+        return { user: UserModel , not_found : false } ;
+    },
+    methods : {
+        fetchUser : function (user_id) {
+            this.$http.get('/api/user/'+ user_id).then(function(response){
+                var responseObj = response.data;
+                if(responseObj.status_code == 404){
+                    this.not_found = true;
+                    return;
+                }
+
+                if(responseObj.success) this.user = responseObj.response[0];
+
+            });
+        }
     }
 });
 
@@ -114,6 +133,12 @@ Vue.filter('formatDate', function(value) {
     if (value) {
         return moment(String(value)).format('DD/MM/YYYY')
     }
+});
+
+Vue.filter('formatDateTime',function(value){
+   if(value){
+       return moment(String(value),"YYYY-MM-D HH:mm:ss").format('MMMM Do YYYY, h:mm:ss a');
+   }
 });
 
 var router = new VueRouter({routes:[
