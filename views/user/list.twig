@@ -1,0 +1,43 @@
+{% verbatim %}
+    <template id="user-list">
+        <div>
+            <div class="actions">
+                <router-link class="btn btn-default" v-bind:to="{path: '/add-user'}">
+                    <span class="fa fa-plus"></span>
+                    Add User
+                </router-link>
+            </div>
+            <div class="filters row">
+                <div class="form-group col-sm-3">
+                    <label for="search-element">User name</label>
+                    <input v-model="searchKey" class="form-control" id="search-element" requred/>
+                </div>
+            </div>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Gender</th>
+                    <th>Date of Birth</th>
+                    <th class="col-sm-2">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="user in users">
+                    <td>
+                        <router-link v-bind:to=" { name: 'user', params: {user_id: user.id} }">{{ user.title }} {{ user.firstName }} {{ user.middleInitial }} {{ user.lastName }}</router-link>
+                    </td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.gender }}</td>
+                    <td>{{ user.dateOfBirth | formatDate }}</td>
+                    <td>
+                        <router-link class="btn btn-warning btn-xs" v-bind:to="{name: 'user-edit', params: {user_id: user.id}}">Edit</router-link>
+                        <router-link class="btn btn-danger btn-xs" v-bind:to="{name: 'user-delete', params: {user_id: user.id}}">Delete</router-link>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </template>
+{% endverbatim %}

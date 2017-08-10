@@ -1,0 +1,11 @@
+{% verbatim %}
+    <template id="user-edit">
+        <div>
+            <h2>Edit User</h2>
+            <form v-on:submit="updateUser">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <router-link class="btn btn-default" v-bind:to="'/'">Cancel</router-link>
+            </form>
+        </div>
+    </template>
+{% endverbatim %}
