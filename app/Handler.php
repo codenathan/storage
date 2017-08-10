@@ -211,10 +211,11 @@ class Handler{
         return in_array($method,$api_method_names);
     }
 
+    /*
     private function isViewAllowed($view){
         return in_array($view,$this->views);
     }
-
+    */
 
     private function initModel($model_name)
     {
