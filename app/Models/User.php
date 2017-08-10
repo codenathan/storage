@@ -60,9 +60,23 @@ class User extends Model {
     public function get_validation()
     {
         return [
-            'username'          => '/^[a-zA-Z0-9-_]+$/',
-            'first_name'        => '/^[a-z0-9 .\-]+$/i',
-            'middleInitial'     => '/^[a-zA-Z]$/',
+            'username'              => '/^[a-zA-Z0-9-_]+$/',
+            'title'                 => [
+                                        'conditional_model' => 'gender',
+                                        'conditional_value' => ['Mr','Mrs','Miss','Ms','Rev','Dr','Professor'],
+                                        'conditional_map'   => [
+                                                'M'     => ['Mr','Rev','Dr','Professor'],
+                                                'F'     => ['Mrs','Miss','Ms','Dr','Professor']
+                                            ]
+                                        ],
+            'firstName'             => '/^[a-z0-9 .\-]+$/i',
+            'middleInitial'         => '/^[a-zA-Z]$/',
+            'lastName'              => '/^[a-z ,.\'-]+$/i',
+            'gender'                => [
+                                        'conditional_value' => ['M','F'],
+                                        'regex' => '/^[a-zA-Z]$/',
+                                        ],
+            'dateOfBirth'           => '/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/'
 
         ];
     }
@@ -74,6 +88,6 @@ class User extends Model {
 
     public function getRequiredFields()
     {
-       return ['user'];
+       return ['username','title','firstName','lastName','gender','dateOfBirth'];
     }
 }
