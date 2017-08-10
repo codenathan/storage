@@ -60,7 +60,7 @@ class User extends Model {
     public function get_validation()
     {
         return [
-            'username'              => '/^[a-zA-Z0-9-_]+$/',
+            'username'              => ['regex' => '/^[a-zA-Z0-9-_]+$/'],
             'title'                 => [
                                         'conditional_model' => 'gender',
                                         'conditional_value' => ['Mr','Mrs','Miss','Ms','Rev','Dr','Professor'],
@@ -69,14 +69,14 @@ class User extends Model {
                                                 'F'     => ['Mrs','Miss','Ms','Dr','Professor']
                                             ]
                                         ],
-            'firstName'             => '/^[a-z0-9 .\-]+$/i',
-            'middleInitial'         => '/^[a-zA-Z]$/',
-            'lastName'              => '/^[a-z ,.\'-]+$/i',
+            'firstName'             => ['regex' => '/^[a-z0-9 .\-]+$/i'],
+            'middleInitial'         => ['regex' => '/^[a-zA-Z]$/'],
+            'lastName'              => ['regex' => '/^[a-z ,.\'-]+$/i'],
             'gender'                => [
                                         'conditional_value' => ['M','F'],
                                         'regex' => '/^[a-zA-Z]$/',
                                         ],
-            'dateOfBirth'           => '/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/'
+            'dateOfBirth'           => ['regex'=>'/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/']
 
         ];
     }
