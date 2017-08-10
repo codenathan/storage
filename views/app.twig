@@ -6,23 +6,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="codenathan.com">
-    <title>Simple User CRUD application</title>
+    <title>Simple CRUD Application</title>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-
     {% include "includes/header.twig" %}
+
+    {% block header %}
+        {# Any additional header elements can be added here #}
+    {% endblock %}
 </head>
 <body>
-<div id="content"
-{% block content %}
-{% endblock %}
+<div id="content" class="container">
+    <header class="page-header">
+        <h1>Simple CRUD Application</h1>
+    </header>
+    {% block content %}
+    {% endblock %}
 </div>
 <div id="footer">
-    {% include "includes/footer.twig" %}
+{% block footer %}
+    {# Any additional footer elements can be added here as necessary #}
+{% endblock %}
 </div>
 </body>
 </html>

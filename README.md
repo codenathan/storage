@@ -3,7 +3,7 @@
 ### Intro
 
 - This small app allows you to perform CRUD Requests for custom built storage methods
-- You can easily add new classes and implement storage functionality using the interfaces and abstract classes
+- You can easily add new classes and implement storage functionality using the interfaces and abstract classes available
 
 ### Required
 
@@ -20,23 +20,17 @@
 
 ### Front End 
 
-- Template Engine use is Twig, more information [here](https://twig.symfony.com/doc/2.x/templates.html)
+- Template Engine       -   [Twig 2.0 ](https://twig.symfony.com/doc/2.x/templates.html)
+- Front End Framework   -   [Bootstrap v3.3.7](http://getbootstrap.com/getting-started/)
+- Javascript Framework  -   [VueJS 2.4.2](https://vuejs.org/v2/guide/#Getting-Started)
 
-#### Folder Structure
+#### Folder Structure ( for Front End )
 
 ```
-views
-│   index.twig      <-- HOMEPAGE
-└───errors          <-- Contains all the views for error page 
-└───js              <-- put all script files here
-└───images          <-- any images in here
+views/
+├── app.twig        <-- This has the base structure put in place for the html ( can only be extended for other templates to be used)
+├── index.twig      <-- Main Homepage view that is rendered 
+├── includes/       <-- The main includes folder  
+└── errors/         <-- All Error Page Views are added here ( 404 / 501 / etc..)
 
-                    CREATE a new folder for every model
-└───model1
-│   └───index.twig  <-- For Listing all model data
-│   └───create.twig <-- For creating a new model
-│   └───edit.twig   <-- For edit a new model
-│  
-└───model2
-└───model3 etc...
 ```
