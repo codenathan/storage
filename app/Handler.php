@@ -160,6 +160,8 @@ class Handler{
 
        if($view == 'edit' && isset($the_request[2]) && is_numeric($the_request[2])) $this->addViewData('_id',$the_request[2]);
 
+       $this->addViewData('view',$view);
+
         $this->view = strtolower($model_name).'/'.$view;
         $this->initTemplateEngine();
 
