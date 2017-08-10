@@ -93,13 +93,22 @@ class Handler{
 
             if($this->request_method != 'get') $this->verifyToken();
 
-        }if(is_null($this->query_string)){
+        }else{
+
+            // IF not API Request lets render the homepage
+            $this->view = 'index';
+            $this->initTemplateEngine();
+        }
+
+
+      /*
+        if(is_null($this->query_string)){
             $this->view = 'index';
             $this->initTemplateEngine();
         }else{
             $this->setRegularRequestModelView();
 
-        }
+        }*/
 
 
     }
@@ -140,10 +149,10 @@ class Handler{
         $this->method = $method;
     }
 
-
+    /*
     /**
      * Setting model / view for Regular Request
-     */
+
     private function setRegularRequestModelView(){
 
         $the_request = $this->returnRequestSplit();
@@ -167,8 +176,7 @@ class Handler{
 
 
     }
-
-
+    */
 
     /**
      * Process the regular request template / data
