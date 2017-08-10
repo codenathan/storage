@@ -60,7 +60,11 @@ class Handler{
     public $view = 'errors/404';
 
 
-    public $data = array();
+    /**
+     * If not API Request this will hold the view data
+     * @var array
+     */
+    public $view_data = array();
 
     /**
      * Property that holds if the method is allowed ( API Request only)
@@ -154,6 +158,7 @@ class Handler{
 
         if(!$this->isViewAllowed($view)) return;
 
+       if($view == 'edit' && isset($the_request[2]) && is_numeric($the_request[2])) $this->addViewData('_id',$the_request[2]);
 
         $this->view = strtolower($model_name).'/'.$view;
         $this->initTemplateEngine();
@@ -216,8 +221,9 @@ class Handler{
         return $the_request;
     }
 
-    public function loadView($data = []){
-        $data = $this->addViewHeaderVariables($data);
+    public function loadView(){
+
+        $this->addViewHeaderVariables();
 
         $view = $this->view.'.twig';
         if($view != 'errors/404.twig' && !file_exists(STORE_VIEWS.DS.$view)){
@@ -225,7 +231,7 @@ class Handler{
         }
 
 
-       echo $this->template->render($view,$data);
+       echo $this->template->render($view,$this->view_data);
     }
 
     /**
@@ -255,11 +261,12 @@ class Handler{
         $this->verified_token = (isset($_SESSION['token']) && $_SESSION['token'] && isset($_POST['token'])) && ($_POST['token'] == $_SESSION['token']);
     }
 
-    private function addViewHeaderVariables(array $data){
+    private function addViewHeaderVariables(){
+        $this->view_data['token'] = $_SESSION['token'];
+    }
 
-        $data['token'] = $_SESSION['token'];
-
-        return $data;
+    private function addViewData($label,$value){
+        $this->view_data[$label] = $value;
     }
 
 
