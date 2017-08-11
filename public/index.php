@@ -12,7 +12,6 @@ require __DIR__.'/../vendor/autoload.php';
 
 $root = realpath(__DIR__.'/../');
 
-
 /*
 *
 * CONSTANTS;
@@ -36,6 +35,7 @@ defined('DB_NAME')          or define('DB_NAME','storage');
 defined('DB_USER')          or define('DB_USER','codenathan');
 defined('DB_PASS')          or define('DB_PASS','F3!+6p13%q)w$:t');
 
+date_default_timezone_set('Europe/London');
 
 if(STORE_DEBUG){
     error_reporting(E_ALL);
