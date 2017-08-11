@@ -2,16 +2,45 @@
     <template id="add-user">
         <div>
             <h2>Add new user</h2>
-            <form v-on:submit="createUser">
+            <form v-on:submit.prevent="createUser" method="POST" >
+
                 <div class="form-group">
-                    <label for="add-name">Name</label>
-                    <input class="form-control" id="add-name" v-model="user.title" required/>
+                    <label for="gender">Gender <span class="text-danger">*</span></label>
+                    <select id="gender"  name="gender" v-model="user.gender"  required class="form-control" v-on:change="updateTitle">
+                        <option value="M">Male</option>
+                        <option value="F">Female</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="add-name">Username</label>
-                    <input class="form-control" id="add-name" v-model="user.username" required placeholder="Enter a Username ( Alphanumeric with hypen and underscore only)"/>
+                    <label for="title">Title <span class="text-danger">*</span></label>
+                    <select id="title"  name="title" v-model="user.title"  required class="form-control" v-on:change="updateTitle">
+                        <option v-for="title in titles" v-bind:value="title">
+                        {{ title }}
+                        </option>
+                    </select>
                 </div>
+                <div class="form-group">
+                    <label for="firstName">First Name <span class="text-danger">*</span></label>
+                    <input class="form-control" id="firstName" name="firstName" v-model="user.firstName" required placeholder="Enter Your First Name"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="middleInitial">Middle Initial</label>
+                    <input class="form-control" id="middleInitial" v-model="user.middleInitial" placeholder="One Character Only"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="lastName">Last Name <span class="text-danger">*</span></label>
+                    <input class="form-control" id="lastName" v-model="user.lastName" placeholder="Enter Your Last Name"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="dateOfBirth">Date of Birth ( DD/MM/YYYY) <span class="text-danger">*</span></label>
+                    <input name="dateOfBirth" type="date" v-model="user.dateOfBirth" class="form-control" v-bind:max="tomorrowDate">
+                </div>
+
+                <input type="hidden" name="_token" v-model="token" />
 
                 <button type="submit" class="btn btn-primary">Create</button>
                 <router-link class="btn btn-default" v-bind:to="'/'">Cancel</router-link>
