@@ -50,6 +50,7 @@ class ApiResponse{
         $this->success      = $success;
         $this->status_code  = $status_code;
         $this->response     = $response;
+        $this->error        = $error;
 
     }
 
