@@ -5,8 +5,6 @@ namespace  App\Services;
 use App\Core\Model;
 use App\Core\Storage;
 use App\Interfaces\iStorage;
-use App\Models\User;
-use Carbon\Carbon;
 
 class FileStorage extends Storage implements iStorage{
 
@@ -85,7 +83,7 @@ class FileStorage extends Storage implements iStorage{
         return $model;
     }
 
-    private function getAllData(){
+    public function getAllData(){
         $files = glob($this->getModelFolder().'*.json');
 
         foreach($files as $file){
@@ -111,20 +109,5 @@ class FileStorage extends Storage implements iStorage{
 
     }
 
-    public function setCreateFields(){
-        $now = Carbon::now()->toDateTimeString();
-        $this->model->ID            = $this->getNextAvailableID();
-        $this->model->created_at    = $now;
-        $this->model->updated_at    = $now;
-        $this->model->hash          = bin2hex(random_bytes(32));
 
-        $this->model->getCreateFunction($this->getAllData());
-
-    }
-
-    public function setUpdateFields(){
-        $now = Carbon::now()->toDateTimeString();
-        $this->model->updated_at    = $now;
-        $this->model->hash          = bin2hex(random_bytes(32));
-    }
 }

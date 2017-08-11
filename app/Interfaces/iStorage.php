@@ -12,4 +12,12 @@ interface iStorage{
 
     public function delete();
 
+    public function getNextAvailableID();
+
+    public function setCreateFields();
+
+    public function setUpdateFields();
+
+    public function getAllData();
+
 }
