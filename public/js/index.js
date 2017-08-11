@@ -14,6 +14,20 @@ var UserModel = {
     hash            : ''
 };
 
+var UserModelError = {
+    ID              : null,
+    username        : null,
+    title           : null,
+    firstName       : null,
+    middleInitial   : null,
+    lastName        : null,
+    gender          : null,
+    dateOfBirth     : null,
+    created_at      : null,
+    updated_at      : null,
+    hash            : null
+};
+
 var TitleOptions = {
     'all' : [
         'Mr',
@@ -86,7 +100,7 @@ var UserShow = Vue.extend({
 var UserCreate = Vue.extend({
     template: '#add-user',
     data: function () {
-        return { user: UserModel, titles : TitleOptions.all,token : window.codenathan.token }
+        return { user: UserModel, titles : TitleOptions.all,token : window.codenathan.token,errors : {} }
     },
     methods: {
         createUser: function() {
@@ -99,9 +113,8 @@ var UserCreate = Vue.extend({
                 if(responseObj.success){
                     self.user = UserModel;
                     router.push('/');
-                }else{
-                    //check validation
-                    //check erros
+                }else if(responseObj.status_code == "400"){
+                    self.errors = responseObj.error;
                 }
             });
 
@@ -130,7 +143,7 @@ var UserCreate = Vue.extend({
 var UserEdit = Vue.extend({
     template: '#user-edit',
     data: function () {
-        return { user: UserModel, titles : TitleOptions.all,token : window.codenathan.token }
+        return { user: UserModel, titles : TitleOptions.all,token : window.codenathan.token, errors : {} }
     },
     mounted : function(){
         this.fetchUser(this.$route.params.user_id);
@@ -147,9 +160,8 @@ var UserEdit = Vue.extend({
                 if(responseObj.success){
                     self.user = UserModel;
                     router.push('/');
-                }else{
-                    //check validation
-                    //check erros
+                }else if(responseObj.status_code == "400"){
+                    self.errors = responseObj.error;
                 }
             });
 

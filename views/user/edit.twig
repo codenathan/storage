@@ -12,6 +12,11 @@
                     </select>
                 </div>
 
+                 <div class="alert alert-danger" v-if=" 'gender' in errors && errors.gender != 'undefined'" v-for="error in errors.gender">
+                    {{ error }}
+                </div>
+
+
                 <div class="form-group">
                     <label for="title">Title <span class="text-danger">*</span></label>
                     <select id="title"  name="title" v-model="user.title"  required class="form-control" v-on:change="updateTitle">
@@ -20,9 +25,18 @@
                         </option>
                     </select>
                 </div>
+
+                 <div class="alert alert-danger" v-if=" 'title' in errors && errors.title != 'undefined'" v-for="error in errors.title">
+                    {{ error }}
+                </div>
+
                 <div class="form-group">
                     <label for="firstName">First Name <span class="text-danger">*</span></label>
                     <input class="form-control" id="firstName" name="firstName" v-model="user.firstName" required placeholder="Enter Your First Name"/>
+                </div>
+
+                <div class="alert alert-danger" v-if=" 'firstName' in errors && errors.firstName != 'undefined'" v-for="error in errors.firstName">
+                    {{ error }}
                 </div>
 
                 <div class="form-group">
@@ -30,14 +44,27 @@
                     <input class="form-control" id="middleInitial" v-model="user.middleInitial" placeholder="One Character Only"/>
                 </div>
 
+                 <div class="alert alert-danger" v-if=" 'middleInitial' in errors && errors.middleInitial != 'undefined'" v-for="error in errors.middleInitial">
+                    {{ error }}
+                </div>
+
+
                 <div class="form-group">
                     <label for="lastName">Last Name <span class="text-danger">*</span></label>
                     <input class="form-control" id="lastName" v-model="user.lastName" placeholder="Enter Your Last Name"/>
                 </div>
 
+                 <div class="alert alert-danger" v-if=" 'lastName' in errors && errors.lastName != 'undefined'" v-for="error in errors.lastName">
+                    {{ error }}
+                </div>
+
                 <div class="form-group">
                     <label for="dateOfBirth">Date of Birth ( DD/MM/YYYY) <span class="text-danger">*</span></label>
                     <input name="dateOfBirth" type="date" v-model="user.dateOfBirth" class="form-control" v-bind:max="tomorrowDate">
+                </div>
+
+                 <div class="alert alert-danger" v-if=" 'dateOfBirth' in errors && errors.dateOfBirth != 'undefined'" v-for="error in errors.dateOfBirth">
+                    {{ error }}
                 </div>
 
                 <input type="hidden" name="_token" v-model="token" />
