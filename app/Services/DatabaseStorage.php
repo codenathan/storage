@@ -141,7 +141,7 @@ class DatabaseStorage extends Storage implements iStorage{
         }
     }
 
-    private function executeAndFetch($bind_ID = false,$delete = false){
+    private function executeAndFetch($bind_ID = false,$delete = false, $return_just_data = false){
 
         $instance = self::getInstance();
         if(!$instance instanceof \PDO) return $instance;
@@ -155,6 +155,8 @@ class DatabaseStorage extends Storage implements iStorage{
         $this->statement->execute();
 
         $data = $delete ? true : $this->statement->fetchAll(\PDO::FETCH_ASSOC);
+
+        if($return_just_data) return $data;
 
         return $this->returnSuccessResponse($data);
     }
@@ -175,19 +177,19 @@ class DatabaseStorage extends Storage implements iStorage{
     }
 
 
-    public function getNextAvailableID()
-    {
-        $this->query = "SELECT ID FROM ".$this->model->getModelName();
-    }
-
     public function getAllData()
     {
-        // TODO: Implement getAllData() method.
+        $this->query = "SELECT * FROM ".$this->model->getModelName();
+        $data = $this->executeAndFetch(false,false,true);
+
+        if(!is_array($data)) $data = [];
+
+        return $data;
     }
 
 
     public function runCreateCalcFunctions()
     {
-        // TODO: Implement runCreateCalcFunctions() method.
+       $this->model->getCreateFunction($this->getAllData());
     }
 }
