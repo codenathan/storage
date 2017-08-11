@@ -10,6 +10,8 @@
 - PHP 7 for Twig 2.0
 - Composer
 - MySQL if using database storage
+- MOD Rewrite
+- Apache Server
 
 
 ### Getting Started 
