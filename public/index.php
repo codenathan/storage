@@ -1,8 +1,9 @@
 <?php
+
 session_start();
 
-if (empty($_SESSION['token'])) {
-    $_SESSION['token'] = bin2hex(random_bytes(32));
+if (empty($_SESSION['_token'])) {
+    $_SESSION['_token'] = bin2hex(random_bytes(32));
 }
 
 
@@ -29,8 +30,9 @@ defined('STORE_DATA') or define('STORE_DATA', $root.DS.'storage'.DS.'data'.DS);
  *
  * DATABASE
  * */
-defined('DB_HOST')          or define('DB_HOST','localhost');
+defined('DB_HOST')          or define('DB_HOST','127.0.0.1');
 defined('DB_PORT')          or define('DB_PORT',3306);
+defined('DB_NAME')          or define('DB_NAME','storage');
 defined('DB_USER')          or define('DB_USER','codenathan');
 defined('DB_PASS')          or define('DB_PASS','F3!+6p13%q)w$:t');
 
