@@ -2,20 +2,6 @@ var UsersList = [];
 
 var UserModel = {
     ID              : null,
-    username        : '',
-    title           : '',
-    firstName       : '',
-    middleInitial   : '',
-    lastName        : '',
-    gender          : '',
-    dateOfBirth     : '',
-    created_at      : '',
-    updated_at      : '',
-    hash            : ''
-};
-
-var UserModelError = {
-    ID              : null,
     username        : null,
     title           : null,
     firstName       : null,
@@ -51,6 +37,15 @@ var TitleOptions = {
         'Dr',
         'Professor'   
     ]
+};
+
+var resetUserModel = function () {
+    // for all properties of shallow/plain object
+    for (var key in UserModel) {
+        // this check can be safely omitted in modern JS engines
+        // if (obj.hasOwnProperty(key))
+        UserModel[key] = null;
+    }
 }
 
 var List = Vue.extend({
@@ -113,15 +108,13 @@ var UserCreate = Vue.extend({
                 if(responseObj.success){
                     self.user = UserModel;
                     router.push('/');
+                    resetUserModel();
                 }else if(responseObj.status_code == "400"){
                     self.errors = responseObj.error;
                 }
             });
 
             return false;
-
-
-
         },
         updateTitle : function () {
 
@@ -160,6 +153,7 @@ var UserEdit = Vue.extend({
                 if(responseObj.success){
                     self.user = UserModel;
                     router.push('/');
+                    resetUserModel();
                 }else if(responseObj.status_code == "400"){
                     self.errors = responseObj.error;
                 }
@@ -215,6 +209,7 @@ var UserDelete = Vue.extend({
 
                 if(responseObj.success){
                     router.push('/');
+                    resetUserModel();
                 }else{
                     //check validation
                     //check erros
