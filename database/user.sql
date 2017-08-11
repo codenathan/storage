@@ -9,7 +9,7 @@ CREATE TABLE `user` (
   `lastName` varchar(255) NOT NULL DEFAULT '',
   `gender` char(1) NOT NULL DEFAULT '',
   `dateOfBirth` date NOT NULL,
-  `hash` varchar(32) NOT NULL DEFAULT '',
+  `hash` varchar(100) NOT NULL DEFAULT '',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`ID`)
