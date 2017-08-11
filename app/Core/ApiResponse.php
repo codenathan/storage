@@ -56,7 +56,7 @@ class ApiResponse{
     public function applyInvalidMethod(){
         $this->success      = false;
         $this->status_code  = self::HTTP_METHOD_NOT_ALLOWED;
-        $this->error        = [ 'You have made an invalid request'];
+        $this->error['request']        = [ 'You have made an invalid request'];
         $this->response     = [];
         $this->printOutput();
     }
@@ -64,7 +64,7 @@ class ApiResponse{
     public function applyInvalidToken(){
         $this->success      = false;
         $this->status_code  = self::UNAUTHORIZED;
-        $this->error        = ['this is an unauthorized request'];
+        $this->error['auth'] = ['this is an unauthorized request'];
         $this->response     = [];
         $this->printOutput();
     }
