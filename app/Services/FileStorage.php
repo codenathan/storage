@@ -21,10 +21,13 @@ class FileStorage extends Storage implements iStorage{
         return $this->returnSuccessResponse($this->data);
     }
 
-    public function save()
+    public function save($create = false)
     {
+        if($create) $this->setCreateFields();
+
         $json = json_encode($this->model);
         file_put_contents($this->getModelFolder().$this->model->ID.'.json',$json);
+        return $this->returnSuccessResponse($this->model);
     }
 
     public function find()
@@ -94,6 +97,17 @@ class FileStorage extends Storage implements iStorage{
 
     public function getNextAvailableID(){
        return (max(array_keys($this->getAllData())))+1;
+
+    }
+
+    public function setCreateFields(){
+        $now = Carbon::now()->toDateTimeString();
+        $this->model->ID            = $this->getNextAvailableID();
+        $this->model->created_at    = $now;
+        $this->model->updated_at    = $now;
+        $this->model->hash          = bin2hex(random_bytes(32));
+
+        $this->model->getCreateFunction($this->getAllData());
 
     }
 }

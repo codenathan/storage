@@ -90,4 +90,44 @@ class User extends Model {
     {
        return ['username','title','firstName','lastName','gender','dateOfBirth'];
     }
+
+    /**
+     * Runs another set of method on create
+     * @return void
+     */
+    public function getCreateFunction(array $allData)
+    {
+        $usernames = array_column($allData, 'username');
+
+        $ideal_username = $this->firstName.$this->lastName;
+
+       $this->username =  $this->generateUsername($ideal_username,$usernames);
+    }
+
+    private function generateUsername($name,$usernames){
+        // Replace non-AlNum characters with space
+        $name = preg_replace('/[^A-Za-z0-9]/', ' ', $name);
+        // Replace Multiple spaces with single space
+        $name = preg_replace('/ +/', ' ', $name);
+        //replace all empty spaces
+        $name = preg_replace('/\s+/', '', $name);
+        // Trim the string of leading/trailing space
+        $name = trim($name);
+
+        $baseName = $name;
+        $i = 0;
+
+        while($this->findUsername($name,$usernames)) {
+            $name = $baseName . (++$i);
+        }
+
+        return $name;
+    }
+
+    private function findUsername($name,$usernames){
+
+        return in_array($name,$usernames);
+    }
+
+
 }

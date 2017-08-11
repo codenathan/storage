@@ -1,4 +1,5 @@
 var UsersList = [];
+
 var UserModel = {
     ID              : null,
     username        : '',
@@ -13,17 +14,30 @@ var UserModel = {
     hash            : ''
 };
 
-function findUser (user_id) {
-    return UsersList[findUserID(user_id)];
-};
-
-function findUserID (user_id) {
-    for (var key = 0; key < UsersList.length; key++) {
-        if (UsersList[key].id == user_id) {
-            return key;
-        }
-    }
-};
+var TitleOptions = {
+    'all' : [
+        'Mr',
+        'Mrs',
+        'Miss',
+        'Ms',
+        'Rev',
+        'Dr',
+        'Professor'
+    ],
+    'M' : [
+        'Mr',
+        'Rev',
+        'Dr',
+        'Professor'      
+    ],
+    'F' : [
+        'Mrs',
+        'Miss',
+        'Ms',
+        'Dr',
+        'Professor'   
+    ]
+}
 
 var List = Vue.extend({
     template: '#user-list',
@@ -69,23 +83,57 @@ var UserShow = Vue.extend({
     }
 });
 
+var UserCreate = Vue.extend({
+    template: '#add-user',
+    data: function () {
+        return { user: UserModel, titles : TitleOptions.all,token : window.codenathan.token }
+    },
+    methods: {
+        createUser: function() {
+            var self = this;
+            self.user._token = this.token;
+
+            this.$http.post('/api/user/create', self.user).then(function(response){
+                var responseObj = response.data;
+
+                if(responseObj.success){
+                    self.user = UserModel;
+                    router.push('/');
+                }else{
+                    //check validation
+                    //check erros
+                }
+            });
+
+            return false;
+
+
+
+        },
+        updateTitle : function () {
+
+            if(this.user.gender in TitleOptions){
+                this.titles = TitleOptions[this.user.gender];
+            }else{
+                this.titles = TitleOptions.all;
+            }
+        }
+    },
+    computed :{
+        tomorrowDate : function(){
+            var date =  moment(new Date()).add(1,'days').format('DD/MM/YYYY');
+            return date;
+        }
+    }
+});
+
 var UserEdit = Vue.extend({
     template: '#user-edit',
     data: function () {
-        return {user: findUser(this.$route.params.userid)};
+        return {user: UserModel };
     },
     methods: {
         updateUser: function () {
-            var user = this.user;
-            UsersList[findUserID(user.id)] = {
-                id              : user.id,
-                username        : user.username,
-                firstName       : user.firstName,
-                middleInitial   : user.middleInitial,
-                lastName        : user.lastName,
-                gender          : user.gender,
-                dateOfBirth     : user.dateOfBirth
-            };
             router.push('/');
         }
     }
@@ -94,40 +142,16 @@ var UserEdit = Vue.extend({
 var UserDelete = Vue.extend({
     template: '#user-delete',
     data: function () {
-        return {user: findUser(this.$route.params.user_id)};
+        return {user: UserModel};
     },
     methods: {
         deleteUser: function () {
-            UsersList.splice(findUserID(this.$route.params.user_id), 1);
             router.push('/');
         }
     }
 });
 
-var UserCreate = Vue.extend({
-    template: '#add-user',
-    data: function () {
-        return {user: UserModel }
-    },
-    methods: {
-        creatUser: function() {
 
-
-            var user = this.user;
-
-            UsersList.push({
-                id              : user.id,
-                username        : user.username,
-                firstName       : user.firstName,
-                middleInitial   : user.middleInitial,
-                lastName        : user.lastName,
-                gender          : user.gender,
-                dateOfBirth     : user.dateOfBirth
-            });
-            router.push('/');
-        }
-    }
-});
 
 Vue.filter('formatDate', function(value) {
     if (value) {
@@ -150,8 +174,9 @@ var router = new VueRouter({routes:[
 ]});
 
 Vue.config.debug = true;
+Vue.http.options.emulateJSON = true;
 
 app = new Vue({
     router:router,
-    el : '#app'
+    el : '#app',
 })

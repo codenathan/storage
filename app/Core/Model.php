@@ -24,6 +24,13 @@ abstract class Model{
     abstract public function getRequiredFields();
 
     /**
+     * Runs another set of method on create, need to pass through all the data from storage to see current data
+     * @param  array $allData
+     * @return void
+     */
+    abstract public function getCreateFunction(array $allData);
+
+    /**
      * @return string
      */
     abstract public function getModelName();

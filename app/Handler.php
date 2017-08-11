@@ -40,7 +40,7 @@ class Handler{
 
 
     /**
-     * Specifies the method name which we need to call
+     * Specifies the method name which we need to call on the API
      * @var string | null
      */
     public $method = null;
@@ -72,6 +72,11 @@ class Handler{
      */
     public $method_allowed = false;
 
+
+    public $token = null;
+
+    public $postData = array();
+
     /**
      * Property that holds if the method is verified ( API and Non GET Requests)
      * @var boolean
@@ -84,7 +89,7 @@ class Handler{
     public function __construct()
     {
         $this->query_string = isset($_GET['qs']) ? $_GET['qs'] : null;
-
+        $this->token        = isset($_POST['_token']) ? $_POST['_token'] : null;
 
         if($this->isApiRequest()) {
 
@@ -92,6 +97,11 @@ class Handler{
             $this->isMethodAllowed();
 
             if($this->request_method != 'get') $this->verifyToken();
+
+            if($this->request_method != 'get') {
+                $this->postData = $_POST;
+                $this->mapData();
+            }
 
         }else{
 
@@ -272,16 +282,22 @@ class Handler{
      * Checks if the data has been tampered with, only required for non get request
      */
     public function verifyToken(){
-        $this->verified_token = (isset($_SESSION['token']) && $_SESSION['token'] && isset($_POST['token'])) && ($_POST['token'] == $_SESSION['token']);
+        $this->verified_token = is_null($this->token) && empty($this->token) ? false : hash_equals($_SESSION['_token'],$this->token);
     }
 
     private function addViewHeaderVariables(){
-        $this->view_data['token'] = $_SESSION['token'];
+        $this->view_data['_token'] = $_SESSION['_token'];
         $this->view_data['STORE_DEBUG'] = STORE_DEBUG;
     }
 
     private function addViewData($label,$value){
         $this->view_data[$label] = $value;
+    }
+
+    private function mapData(){
+        foreach ($this->model->properties() as $property){
+            $this->model->{$property} = isset($this->postData[$property]) ? $this->postData[$property] : null;
+        }
     }
 
 

@@ -34,7 +34,7 @@ class Api{
      * HTTP Verbs - POST
      */
     public function create(){
-       return $this->storage->save();
+       return $this->storage->save(true);
     }
 
     public function show(){
