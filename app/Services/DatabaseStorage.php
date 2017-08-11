@@ -18,6 +18,8 @@ class DatabaseStorage extends Storage implements iStorage{
 
     public $statement;
 
+    public $params;
+
 
     public static function getInstance(){
 
@@ -69,32 +71,12 @@ class DatabaseStorage extends Storage implements iStorage{
 
         if($create){
             try{
-                $parameters = array_map(function($property) { return ":$property"; }, $properties);
+                $this->params = array_map(function($property) { return ":$property"; }, $properties);
 
 
-                $query = "INSERT INTO {$this->getTableName()}(".implode(",",$properties).") VALUES (".implode(",",$parameters)." )";
+                $this->query = "INSERT INTO {$this->getTableName()}(".implode(",",$properties).") VALUES (".implode(",",$this->params)." )";
 
-
-                $this->statement = self::getInstance()->prepare($query);
-
-
-                $i = 1;
-                foreach($properties as $property){
-                    $array['model'][$property] = $this->model->{$property};
-
-                    $this->statement->bindParam($property,$this->model->{$property});
-                    $i++;
-                }
-
-
-                $created = $this->statement->execute();
-
-
-                if($created) return $this->returnSuccessResponse();
-
-                return $this->returnErrorResponse();
-
-
+                return $this->executeWithParameters(false);
             }catch (\PDOException $error){
                 return $this->sendDatabaseErrorResponse($error);
             }
@@ -102,15 +84,25 @@ class DatabaseStorage extends Storage implements iStorage{
 
         }else{
             try {
-                $this->query =  "UPDATE {$this->getTableName()} SET "." "." WHERE ID = (:ID)";
 
-                return $this->executeAndFetch(true);
+                $this->params = array_map(function($property) { return " $property = :$property "; }, $properties);
+                $this->query =  "UPDATE {$this->getTableName()} SET ".implode(",",$this->params)." WHERE ID = (:ID)";
+                return $this->executeWithParameters(true);
+
             }catch (\PDOException $error){
                 return $this->sendDatabaseErrorResponse($error);
             }
         }
 
-        return $this->returnErrorResponse();
+    }
+
+    private function executeWithParameters($bindID = false){
+        $this->statement = self::getInstance()->prepare($this->query);
+        foreach($this->params as $property){
+            $this->statement->bindParam($property,$this->model->{$property});
+        }
+
+        return $this->executeAndFetch($bindID);
     }
 
     public function find()
@@ -149,7 +141,7 @@ class DatabaseStorage extends Storage implements iStorage{
         $this->statement = self::getInstance()->prepare($this->query);
 
         if($bind_ID){
-            $this->statement->bindParam(':ID',$this->model->ID,\PDO::PARAM_INT);
+            $this->statement->bindParam('ID',$this->model->ID,\PDO::PARAM_INT);
         }
 
         $this->statement->execute();
