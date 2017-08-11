@@ -15,6 +15,8 @@ class Api{
 
     public $model_name;
 
+    public $validation_errors = array();
+
     public function __construct(iStorage $storage)
     {
         $this->storage = $storage;
@@ -34,6 +36,9 @@ class Api{
      * HTTP Verbs - POST
      */
     public function create(){
+        if(!$this->validate(true)){
+            return $this->returnNonValidatedResponse();
+        }
        return $this->storage->save(true);
     }
 
@@ -45,7 +50,9 @@ class Api{
      * HTTP Verbs - PUT / PATCH
      */
     public function update(){
-      //  $this->validate();
+        if(!$this->validate()){
+            return $this->returnNonValidatedResponse();
+        }
         return $this->storage->save();
     }
 
@@ -56,14 +63,18 @@ class Api{
         return $this->storage->delete();
     }
 
-    private function validate(array $validations){
+    private function validate($create = false){
 
         foreach($this->model->properties() as $property){
             //TODO : Implement validation for models here
         }
 
-        return false;
+        return true;
 
+    }
+
+    private function returnNonValidatedResponse(){
+        return new ApiResponse(false,null,ApiResponse::HTTP_BAD_REQUEST,$this->validation_errors);
     }
 
 }
