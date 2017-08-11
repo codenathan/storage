@@ -52,10 +52,15 @@ class FileStorage extends Storage implements iStorage{
     public function delete()
     {
         $file = $this->getModelFolder().$this->model->ID.'.json';
+        $current_file_obj = $this->returnObject($file);
+
+        if($current_file_obj->hash != $this->model->hash){
+            return $this->returnUnauthorizedDelete();
+        }
 
         if(file_exists($file)){
             unlink($file);
-            return $this->returnSuccessResponse();
+            return $this->returnSuccessResponse($current_file_obj);
         }
 
         return $this->returnNotFoundResponse();

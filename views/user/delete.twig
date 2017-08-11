@@ -2,8 +2,10 @@
     <template id="user-delete">
         <div>
             <h2>Delete User {{ user.firstName }} {{ user.lastName }}</h2>
-            <form v-on:submit="deleteUser">
+            <form v-on:submit.prevent="deleteUser" method="POST">
                 <p>The action cannot be undone.</p>
+                <input type="hidden" name="_token" v-model="token" />
+
                 <button type="submit" class="btn btn-danger">Delete</button>
                 <router-link class="btn btn-default" v-bind:to="'/'">Cancel</router-link>
             </form>

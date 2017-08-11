@@ -43,5 +43,10 @@ abstract class Storage{
         return new $model;
     }
 
+    public function returnUnauthorizedDelete(){
+        $delete = ['auth' => 'This is an authorized delete '];
+        return (new ApiResponse(false,null,ApiResponse::UNAUTHORIZED,$delete));
+    }
+
 
 }

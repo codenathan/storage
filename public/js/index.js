@@ -139,7 +139,7 @@ var UserEdit = Vue.extend({
         updateUser: function () {
             var self = this;
             self.user._token = this.token;
-            self.user._method = 'patch'
+            self.user._method = 'patch';
 
             this.$http.post('/api/user/update', self.user).then(function(response){
                 var responseObj = response.data;
@@ -174,13 +174,47 @@ var UserEdit = Vue.extend({
 var UserDelete = Vue.extend({
     template: '#user-delete',
     data: function () {
-        return {user: UserModel};
+        return {user: UserModel,token : window.codenathan.token};
+    },
+    mounted : function(){
+
+        this.fetchUser(this.$route.params.user_id);
     },
     methods: {
         deleteUser: function () {
-            router.push('/');
+            var self = this;
+            self.user._token = this.token;
+            self.user._method = 'delete'
+            this.$http.post('/api/user/delete', self.user).then(function(response){
+                var responseObj = response.data;
+
+                if(responseObj.success){
+                    router.push('/');
+                }else{
+                    //check validation
+                    //check erros
+                }
+            });
+
+            return false;
+        },
+        fetchUser : function (user_id) {
+            this.$http.get('/api/user/'+ user_id).then(function(response){
+                var responseObj = response.data;
+                if(responseObj.status_code == 404){
+                    this.not_found = true;
+                    return;
+                }
+
+                if(responseObj.success) this.user = responseObj.response[0];
+
+                console.log(this.user);
+
+            });
         }
+
     }
+
 });
 
 

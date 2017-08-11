@@ -53,7 +53,7 @@ class Api{
      * HTTP Verbs - DESTROY
      */
     public function delete(){
-
+        return $this->storage->delete();
     }
 
     private function validate(array $validations){

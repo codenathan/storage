@@ -72,7 +72,6 @@ class Handler{
      */
     public $method_allowed = false;
 
-
     public $token = null;
 
     public $postData = array();
@@ -263,6 +262,7 @@ class Handler{
      */
     public function isMethodAllowed(){
         $this->request_method = isset($_POST['_method']) ? $_POST['_method'] : strtolower($_SERVER['REQUEST_METHOD']);
+
 
         $method_request_method_mapping = [
             'get'       => ['index','show'],
