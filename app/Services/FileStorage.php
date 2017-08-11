@@ -105,7 +105,9 @@ class FileStorage extends Storage implements iStorage{
     }
 
     public function getNextAvailableID(){
-       return (max(array_keys($this->getAllData())))+1;
+        $allData = $this->getAllData();
+        if(empty($allData)) return 1;
+       return (max(array_keys($allData)))+1;
 
     }
 
