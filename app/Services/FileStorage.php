@@ -23,6 +23,7 @@ class FileStorage extends Storage implements iStorage{
     {
         if($create){
             $this->setCreateFields();
+            $this->runCreateCalcFunctions();
         } else{
             $this->setUpdateFields();
         }
@@ -109,9 +110,8 @@ class FileStorage extends Storage implements iStorage{
 
     }
 
-    public function setCreateFields()
+    public function runCreateCalcFunctions()
     {
-        parent::setCreateFields();
         $this->model->ID            = $this->getNextAvailableID();
         $this->model->getCreateFunction($this->getAllData());
     }

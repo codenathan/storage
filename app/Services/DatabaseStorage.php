@@ -56,6 +56,7 @@ class DatabaseStorage extends Storage implements iStorage{
     {
         if($create){
             $this->setCreateFields();
+            $this->runCreateCalcFunctions();
         } else{
             $this->setUpdateFields();
         }
@@ -176,11 +177,17 @@ class DatabaseStorage extends Storage implements iStorage{
 
     public function getNextAvailableID()
     {
-        // TODO: Implement getNextAvailableID() method.
+        $this->query = "SELECT ID FROM ".$this->model->getModelName();
     }
 
     public function getAllData()
     {
         // TODO: Implement getAllData() method.
+    }
+
+
+    public function runCreateCalcFunctions()
+    {
+        // TODO: Implement runCreateCalcFunctions() method.
     }
 }

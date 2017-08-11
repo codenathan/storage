@@ -20,4 +20,6 @@ interface iStorage{
 
     public function getAllData();
 
+    public function runCreateCalcFunctions();
+
 }
