@@ -166,8 +166,21 @@ var UserEdit = Vue.extend({
                 if(responseObj.success) this.user = responseObj.response[0];
 
             });
-        }
+        },
+        updateTitle : function () {
 
+            if(this.user.gender in TitleOptions){
+                this.titles = TitleOptions[this.user.gender];
+            }else{
+                this.titles = TitleOptions.all;
+            }
+        }
+    },
+    computed :{
+        tomorrowDate : function(){
+            var date =  moment(new Date()).add(1,'days').format('DD/MM/YYYY');
+            return date;
+        }
     }
 });
 
