@@ -6,10 +6,11 @@ use App\Interfaces\iStorage;
 
 class Api{
 
-    //TODO : get request headers for post
-
     public $storage;
 
+    /**
+     * @var Model
+     */
     public $model;
 
     public $model_name;
@@ -33,7 +34,7 @@ class Api{
      * HTTP Verbs - POST
      */
     public function create(){
-        $this->validate([]);
+       return $this->storage->save();
     }
 
     public function show(){
