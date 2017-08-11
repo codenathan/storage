@@ -18,8 +18,6 @@ class DatabaseStorage extends Storage implements iStorage{
 
     public $statement;
 
-    public $query_errors = array();
-
 
     public static function getInstance(){
 
@@ -43,7 +41,7 @@ class DatabaseStorage extends Storage implements iStorage{
     public function index()
     {
         try{
-            $this->query = "SELECT * FROM ".$this->model->getModelName();
+            $this->query = "SELECT * FROM {$this->getTableName()}";
             return $this->executeAndFetch();
 
         }catch (\PDOException $error){
@@ -71,32 +69,32 @@ class DatabaseStorage extends Storage implements iStorage{
 
         if($create){
             try{
-                $question_marks = array_map(function($val) { return "?"; }, $properties);
+                $parameters = array_map(function($property) { return ":$property"; }, $properties);
 
-                $query = "INSERT INTO (".implode(",",$properties).") VALUES (".implode(",",$question_marks)." ) ";
+
+                $query = "INSERT INTO {$this->getTableName()}(".implode(",",$properties).") VALUES (".implode(",",$parameters)." )";
 
 
                 $this->statement = self::getInstance()->prepare($query);
 
+
                 $i = 1;
-                $this->query_errors['query'] = $query;
-                $this->query_errors['properties'] = $properties;
-                $this->query_errors['questions'] = $question_marks;
-
                 foreach($properties as $property){
-                    if(!isset($this->query_errors['model'])){
-                        $this->query_errors['model'] = [];
-                    }
-                    $this->query_errors['model'][$property]  = [
-                        $i, $this->model->{$property}
-                    ];
+                    $array['model'][$property] = $this->model->{$property};
 
-                    $this->statement->bindParam($i,$this->model->{$property});
+                    $this->statement->bindParam($property,$this->model->{$property});
+                    $i++;
                 }
 
-                return $this->testQueryErrors();
 
-                $this->statement->execute();
+                $created = $this->statement->execute();
+
+
+                if($created) return $this->returnSuccessResponse();
+
+                return $this->returnErrorResponse();
+
+
             }catch (\PDOException $error){
                 return $this->sendDatabaseErrorResponse($error);
             }
@@ -104,13 +102,15 @@ class DatabaseStorage extends Storage implements iStorage{
 
         }else{
             try {
-                $this->query =  "UPDATE ".$this->model->getModelName()." SET "." "." WHERE ID = (:ID)";
+                $this->query =  "UPDATE {$this->getTableName()} SET "." "." WHERE ID = (:ID)";
+
                 return $this->executeAndFetch(true);
             }catch (\PDOException $error){
                 return $this->sendDatabaseErrorResponse($error);
             }
         }
 
+        return $this->returnErrorResponse();
     }
 
     public function find()
@@ -119,7 +119,7 @@ class DatabaseStorage extends Storage implements iStorage{
         if(!$instance instanceof \PDO) return $instance;
 
         try {
-            $this->query = "SELECT * FROM " . $this->model->getModelName() . " WHERE ID = (:ID)";
+            $this->query = "SELECT * FROM {$this->getTableName()} WHERE ID = (:ID)";
             return $this->executeAndFetch(true);
 
             return $this->returnSuccessResponse($data);
@@ -133,7 +133,7 @@ class DatabaseStorage extends Storage implements iStorage{
         $instance = self::getInstance();
         if(!$instance instanceof \PDO) return $instance;
         try {
-            $this->query = "DELETE FROM ".$this->model->getModelName()." WHERE ID = (:ID)";
+            $this->query = "DELETE FROM {$this->getTableName()} WHERE ID = (:ID)";
             return $this->executeAndFetch(true,true);
 
         }catch (\PDOException $error){
@@ -172,14 +172,10 @@ class DatabaseStorage extends Storage implements iStorage{
         return $this->returnErrorResponse($errors);
     }
 
-    private function testQueryErrors(){
-        return $this->returnErrorResponse($this->query_errors);
-    }
-
 
     public function getAllData()
     {
-        $this->query = "SELECT * FROM ".$this->model->getModelName();
+        $this->query = "SELECT * FROM {$this->getTableName()}";
         $data = $this->executeAndFetch(false,false,true);
 
         if(!is_array($data)) $data = [];
@@ -187,9 +183,12 @@ class DatabaseStorage extends Storage implements iStorage{
         return $data;
     }
 
-
     public function runCreateCalcFunctions()
     {
        $this->model->getCreateFunction($this->getAllData());
+    }
+
+    private function getTableName(){
+        return ucwords($this->model->getModelName());
     }
 }
