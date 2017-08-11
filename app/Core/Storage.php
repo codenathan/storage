@@ -1,5 +1,6 @@
 <?php namespace App\Core;
 
+use Carbon\Carbon;
 
 abstract class Storage{
 
@@ -66,12 +67,9 @@ abstract class Storage{
 
     public function setCreateFields(){
         $now = Carbon::now()->toDateTimeString();
-        $this->model->ID            = $this->getNextAvailableID();
         $this->model->created_at    = $now;
         $this->model->updated_at    = $now;
         $this->model->hash          = bin2hex(random_bytes(32));
-
-        $this->model->getCreateFunction($this->getAllData());
 
     }
 

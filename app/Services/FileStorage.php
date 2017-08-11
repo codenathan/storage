@@ -109,5 +109,12 @@ class FileStorage extends Storage implements iStorage{
 
     }
 
+    public function setCreateFields()
+    {
+        parent::setCreateFields();
+        $this->model->ID            = $this->getNextAvailableID();
+        $this->model->getCreateFunction($this->getAllData());
+    }
+
 
 }
