@@ -233,7 +233,6 @@ var UserDelete = Vue.extend({
 
                 if(responseObj.success) this.user = responseObj.response[0];
 
-                console.log(this.user);
 
             });
         }

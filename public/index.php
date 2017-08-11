@@ -24,6 +24,17 @@ defined('STORE_FOLDER') or define('STORE_FOLDER', $root.DS.'storage'.DS);
 defined('STORE_CACHE') or define('STORE_CACHE', $root.DS.'storage'.DS.'cache'.DS);
 defined('STORE_DATA') or define('STORE_DATA', $root.DS.'storage'.DS.'data'.DS);
 
+
+/*
+ *
+ * DATABASE
+ * */
+defined('DB_HOST')          or define('DB_HOST','localhost');
+defined('DB_PORT')          or define('DB_PORT',3306);
+defined('DB_USER')          or define('DB_USER','codenathan');
+defined('DB_PASS')          or define('DB_PASS','F3!+6p13%q)w$:t');
+
+
 if(STORE_DEBUG){
     error_reporting(E_ALL);
     ini_set('display_errors', 1);
