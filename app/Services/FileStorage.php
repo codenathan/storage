@@ -65,7 +65,7 @@ class FileStorage extends Storage implements iStorage{
     }
 
     private function getModelFolder(){
-        return STORE_DATA.$this->model->getModelName().DS;
+        return STORE_DATA.strtolower($this->model->getModelName()).DS;
     }
 
     private function openFile($file){
