@@ -12,6 +12,7 @@ class ApiResponse{
     const UNAUTHORIZED                  = 401; // Unauthorized - Someone has tampered with the data
     const HTTP_METHOD_NOT_ALLOWED       = 405; // Method Not Allowed - Trying a get on a post method
     const HTTP_NOT_FOUND                = 404; // NOT FOUND - The request methods do not exist
+    const SERVICE_UNAVAILABLE           = 503; // SERVICE UNAVAILABLE - Error internal
 
 
     /**
