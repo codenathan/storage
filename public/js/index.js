@@ -130,12 +130,44 @@ var UserCreate = Vue.extend({
 var UserEdit = Vue.extend({
     template: '#user-edit',
     data: function () {
-        return {user: UserModel };
+        return { user: UserModel, titles : TitleOptions.all,token : window.codenathan.token }
+    },
+    mounted : function(){
+        this.fetchUser(this.$route.params.user_id);
     },
     methods: {
         updateUser: function () {
-            router.push('/');
+            var self = this;
+            self.user._token = this.token;
+            self.user._method = 'patch'
+
+            this.$http.post('/api/user/update', self.user).then(function(response){
+                var responseObj = response.data;
+
+                if(responseObj.success){
+                    self.user = UserModel;
+                    router.push('/');
+                }else{
+                    //check validation
+                    //check erros
+                }
+            });
+
+            return false;
+        },
+        fetchUser : function (user_id) {
+            this.$http.get('/api/user/'+ user_id).then(function(response){
+                var responseObj = response.data;
+                if(responseObj.status_code == 404){
+                    this.not_found = true;
+                    return;
+                }
+
+                if(responseObj.success) this.user = responseObj.response[0];
+
+            });
         }
+
     }
 });
 
@@ -164,6 +196,7 @@ Vue.filter('formatDateTime',function(value){
        return moment(String(value),"YYYY-MM-D HH:mm:ss").format('MMMM Do YYYY, h:mm:ss a');
    }
 });
+
 
 var router = new VueRouter({routes:[
     { path: '/', component: List},

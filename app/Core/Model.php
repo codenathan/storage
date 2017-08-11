@@ -30,6 +30,8 @@ abstract class Model{
      */
     abstract public function getCreateFunction(array $allData);
 
+    abstract public function getUpdateFunction();
+
     /**
      * @return string
      */

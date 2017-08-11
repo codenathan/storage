@@ -104,6 +104,11 @@ class User extends Model {
        $this->username =  $this->generateUsername($ideal_username,$usernames);
     }
 
+    public function getUpdateFunction()
+    {
+
+    }
+
     private function generateUsername($name,$usernames){
         // Replace non-AlNum characters with space
         $name = preg_replace('/[^A-Za-z0-9]/', ' ', $name);

@@ -46,6 +46,7 @@ class Api{
      */
     public function update(){
       //  $this->validate();
+        return $this->storage->save();
     }
 
     /**
