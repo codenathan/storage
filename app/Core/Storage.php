@@ -25,7 +25,8 @@ abstract class Storage{
     }
 
 
-    protected function returnSuccessResponse($data){
+    protected function returnSuccessResponse($data = null){
+        if(is_null($data)) $data = [];
         if(!is_array($data)) $data = [$data];
         return (new ApiResponse(true,$data,ApiResponse::HTTP_OK));
     }
@@ -46,6 +47,20 @@ abstract class Storage{
     public function returnUnauthorizedDelete(){
         $delete = ['auth' => 'This is an authorized delete '];
         return (new ApiResponse(false,null,ApiResponse::UNAUTHORIZED,$delete));
+    }
+
+
+    protected static function  sendConnectionErrorResponse($error = null){
+        if(is_null($error)) $error = [];
+        if(!is_array($error)) $error = [$error];
+        return new ApiResponse(false,null,ApiResponse::SERVICE_UNAVAILABLE,$error);
+    }
+
+    protected function returnErrorResponse($error = null){
+        if(is_null($error)) $error = [];
+        if(!is_array($error)) $error = [$error];
+
+        return (new ApiResponse(false,null,ApiResponse::HTTP_BAD_REQUEST,$error));
     }
 
 
